@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>행정소송의 한계 · 실전답안 | 5급공채형</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f7f5f0;--card:#fff;--text:#1a1a1a;--line:#e0dcd4;--blue:#1a4b8c;--blue-l:#e8eef8;--blue-m:#3a6db5;--green:#1a6644;--green-l:#e6f2ec;--red:#a02020;--red-l:#faeaea;--gold:#7a5c00;--gold-l:#fdf5dc;--accent:#c8a84b;--purple:#5a2d8c;--purple-l:#ede6f5;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;min-height:100vh}
+.hdr{background:var(--green);color:#fff;padding:20px 24px 16px;text-align:center;border-bottom:3px solid var(--accent)}
+.hdr-eyebrow{font-size:10px;letter-spacing:3px;opacity:.6;margin-bottom:5px}
+.hdr-title{font-family:'Noto Serif KR',serif;font-size:18px;font-weight:700;margin-bottom:3px}
+.hdr-sub{font-size:11px;opacity:.7}
+.tabs{background:#fff;border-bottom:2px solid var(--line);position:sticky;top:0;z-index:100;overflow-x:auto;white-space:nowrap;text-align:center}
+.tabs::-webkit-scrollbar{display:none}
+.tab-inner{display:inline-flex}
+.tab{padding:12px 17px;font-size:12px;font-weight:700;color:#888;background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;transition:all .2s;font-family:'Noto Sans KR',sans-serif}
+.tab.on{color:var(--green);border-bottom-color:var(--green)}.tab:hover{color:var(--blue)}
+.main{max-width:860px;margin:0 auto;padding:24px 16px 60px}
+.panel{display:none}.panel.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;margin-bottom:16px;overflow:hidden}
+.card-head{padding:11px 18px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;color:#fff}
+.ch-blue{background:var(--blue)}.ch-green{background:var(--green)}.ch-gold{background:var(--gold)}.ch-red{background:var(--red)}.ch-purple{background:var(--purple)}
+.card-body{padding:16px 18px}
+.tbl{width:100%;border-collapse:collapse;font-size:12.5px}
+.tbl th{background:var(--blue-l);color:var(--blue);font-weight:700;padding:8px 10px;text-align:left;border:1px solid #d0dbee;font-size:11.5px}
+.tbl td{padding:8px 10px;border:1px solid var(--line);vertical-align:top;line-height:1.65}
+.tbl tr:nth-child(even) td{background:#faf9f6}
+.kw{color:var(--blue);font-weight:700}.g{color:var(--green);font-weight:700}.r{color:var(--red);font-weight:700}
+.hl{background:#fff3c0;border-radius:3px;padding:0 3px;font-weight:700}
+.alert{border-left:4px solid;border-radius:0 8px 8px 0;padding:10px 14px;margin-top:12px;font-size:12.5px;line-height:1.65}
+.al-blue{background:var(--blue-l);border-color:var(--blue-m)}.al-gold{background:var(--gold-l);border-color:var(--accent)}
+.al-green{background:var(--green-l);border-color:var(--green)}.al-red{background:var(--red-l);border-color:var(--red)}
+.alert-label{font-weight:700;font-size:11.5px;margin-bottom:3px}
+.al-blue .alert-label{color:var(--blue)}.al-gold .alert-label{color:var(--gold)}.al-green .alert-label{color:var(--green)}.al-red .alert-label{color:var(--red)}
+.body-text{font-size:12.5px;line-height:1.8;color:#333}
+.판례박스{background:#fafafa;border:1.5px solid #bbb;border-radius:6px;padding:12px 15px;font-size:12px;line-height:1.75;margin:10px 0;font-family:'Noto Serif KR',serif}
+.판례박스 .출처{font-size:10.5px;color:#888;margin-top:6px;font-family:'Noto Sans KR',sans-serif}
+.fc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.fc-wrap{perspective:1000px;height:200px;cursor:pointer}
+.fc-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,0,.2,1)}
+.fc-wrap.flip .fc-inner{transform:rotateY(180deg)}
+.fc-f,.fc-b{position:absolute;inset:0;backface-visibility:hidden;border-radius:12px;padding:18px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+.fc-f{background:var(--card);border:2px solid var(--line)}
+.fc-b{background:var(--blue);color:#fff;transform:rotateY(180deg);align-items:flex-start;text-align:left;overflow:hidden}
+.fc-b.gn{background:var(--green)}.fc-b.gd{background:var(--gold)}.fc-b.rd{background:var(--red)}.fc-b.pp{background:var(--purple)}
+.fc-f .fc-ico{font-size:26px;margin-bottom:8px}.fc-f .fc-term{font-size:13px;font-weight:700;color:var(--blue);margin-bottom:5px;font-family:'Noto Serif KR',serif}.fc-f .fc-hint{font-size:10px;color:#aaa}
+.fc-b .fc-bt{font-size:11px;font-weight:700;margin-bottom:6px;opacity:.8}.fc-b ul{list-style:none;width:100%}
+.fc-b ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.15);line-height:1.5;display:flex;gap:5px}
+.fc-b ul li:last-child{border-bottom:none}.fc-b ul li::before{content:'▸';opacity:.7;flex-shrink:0;font-size:9px;margin-top:2px}
+.score-bar{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:11px 16px;display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.score-label{font-weight:700;color:var(--blue);font-size:12.5px}.score-num{font-size:20px;font-weight:900}
+.reset-btn{margin-left:auto;background:var(--blue);color:#fff;border:none;border-radius:7px;padding:6px 13px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif}
+.reset-btn:hover{background:#0f3570}
+.qi{background:var(--card);border:1px solid var(--line);border-radius:10px;margin-bottom:11px;overflow:hidden;transition:border-color .2s}
+.qi.correct{border-color:var(--green)}.qi.wrong{border-color:var(--red)}
+.qi-q{padding:13px 15px;font-size:12.5px;line-height:1.65;font-weight:500}
+.qi-qn{font-size:10px;color:var(--blue-m);font-weight:700;margin-bottom:4px}
+.qi-btns{display:flex;gap:8px;padding:0 15px 11px}
+.ox{flex:1;padding:8px;border-radius:8px;border:2px solid var(--line);background:#fff;font-size:16px;cursor:pointer;font-weight:700;transition:all .15s}
+.ox:hover:not(:disabled){background:#eef4ff;border-color:var(--blue-m)}.ox:disabled{cursor:default}
+.ox.sc{background:#e6f2ec;border-color:var(--green)}.ox.sw{background:#faeaea;border-color:var(--red)}
+.qi-exp{display:none;font-size:12px;line-height:1.65;padding:9px 15px 12px;border-top:1px solid var(--line)}
+.qi-exp.cok{background:#f0fbf4}.qi-exp.cng{background:#fff5f5}
+.qi-v{font-weight:900;font-size:12.5px;margin-bottom:3px}.qi-v.ok{color:var(--green)}.qi-v.ng{color:var(--red)}
+.mem-intro{background:var(--blue-l);border:1px solid #c5d5ee;border-radius:10px;padding:12px 15px;margin-bottom:16px;font-size:12.5px;line-height:1.7;color:var(--blue)}
+.mem-progress{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.mem-bar-wrap{flex:1;height:5px;background:var(--line);border-radius:3px;overflow:hidden}
+.mem-bar{height:100%;background:var(--green);border-radius:3px;transition:width .3s}
+.mem-prog-label{font-size:11.5px;font-weight:700;color:var(--green);white-space:nowrap}
+.mem-reveal-all{background:var(--blue);color:#fff;border:none;border-radius:7px;padding:6px 12px;font-size:11.5px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;white-space:nowrap}
+.mem-section-title{font-family:'Noto Serif KR',serif;font-size:13px;font-weight:700;color:var(--blue);border-left:4px solid var(--blue);padding-left:9px;margin-bottom:10px;margin-top:16px}
+.mem-section-title.gn{color:var(--green);border-color:var(--green)}.mem-section-title.gd{color:var(--gold);border-color:var(--gold)}
+.mem-item{background:var(--card);border:1px solid var(--line);border-radius:9px;margin-bottom:8px;overflow:hidden}
+.mem-item-head{display:flex;align-items:center;gap:9px;padding:10px 14px;user-select:none}
+.mem-badge{font-size:9.5px;font-weight:700;letter-spacing:.5px;padding:2px 8px;border-radius:10px;flex-shrink:0}
+.mb-def{background:var(--blue-l);color:var(--blue)}.mb-sent{background:var(--green-l);color:var(--green)}.mb-case{background:var(--gold-l);color:var(--gold)}
+.mem-item-label{font-size:12.5px;font-weight:700;flex:1}
+.mem-toggle-btn{font-size:10.5px;color:#aaa;border:1px solid var(--line);border-radius:6px;padding:3px 8px;background:#f7f5f0;cursor:pointer;white-space:nowrap;transition:all .15s;font-family:'Noto Sans KR',sans-serif}
+.mem-toggle-btn:hover{background:var(--blue-l);color:var(--blue);border-color:var(--blue-m)}.mem-toggle-btn.revealed{background:var(--green-l);color:var(--green);border-color:var(--green)}
+.mem-body{border-top:1px solid var(--line);display:none}
+.mem-sentence-wrap{padding:12px 15px}
+.mem-sentence{font-family:'Noto Serif KR',serif;font-size:13px;line-height:2;color:var(--text)}
+.mem-blank{display:inline-block;background:#2d2d2d;color:#2d2d2d;border-radius:3px;padding:0 4px;min-width:50px;cursor:pointer;transition:all .25s;user-select:none;font-family:'Noto Serif KR',serif;font-size:13px}
+.mem-blank.show{background:#fff3c0;color:var(--text)}
+.mem-note{margin-top:8px;padding:7px 10px;border-radius:5px;font-size:11.5px;line-height:1.6}
+.mn-blue{background:var(--blue-l);color:var(--blue)}.mn-green{background:var(--green-l);color:var(--green)}.mn-gold{background:var(--gold-l);color:var(--gold)}.mn-red{background:var(--red-l);color:var(--red)}
+.ms-intro{background:linear-gradient(135deg,#1a2a4a,#1a4b8c);border-radius:12px;padding:16px 18px;margin-bottom:18px;color:#fff}
+.ms-intro-title{font-family:'Noto Serif KR',serif;font-size:14px;font-weight:700;margin-bottom:6px;color:var(--accent)}
+.ms-intro-text{font-size:12px;line-height:1.7;opacity:.85}
+.ms-section{margin-bottom:20px}
+.ms-section-title{font-size:13px;font-weight:700;color:#fff;background:var(--blue);padding:8px 14px;border-radius:8px 8px 0 0}
+.ms-section-title.gn{background:var(--green)}.ms-section-title.gd{background:var(--gold)}.ms-section-title.rd{background:var(--red)}
+.ms-body{background:var(--card);border:1px solid var(--line);border-radius:0 0 8px 8px;padding:16px}
+.ms-step{display:flex;gap:12px;margin-bottom:14px;align-items:flex-start}
+.ms-step:last-child{margin-bottom:0}
+.ms-step-num{width:26px;height:26px;border-radius:50%;background:var(--blue);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.ms-step-num.gn{background:var(--green)}.ms-step-num.gd{background:var(--gold)}
+.ms-step-content{flex:1}
+.ms-step-label{font-size:11.5px;font-weight:700;color:var(--blue);margin-bottom:3px}
+.ms-step-label.gn{color:var(--green)}.ms-step-label.gd{color:var(--gold)}
+.ms-step-text{font-size:12.5px;line-height:1.7;color:#333}
+.ms-example{background:var(--gold-l);border-left:3px solid var(--accent);padding:8px 12px;border-radius:0 6px 6px 0;margin-top:6px;font-size:12px;font-style:italic;color:#444;line-height:1.6}
+.ms-keyword-box{background:var(--blue-l);border-radius:8px;padding:10px 13px;margin-top:10px}
+.ms-keyword-title{font-size:11px;font-weight:700;color:var(--blue);margin-bottom:6px}
+.ms-keywords{display:flex;flex-wrap:wrap;gap:6px}
+.ms-kw{padding:4px 10px;border-radius:15px;font-size:11.5px;font-weight:500;background:#fff;border:1px solid #c5d5ee;color:var(--blue)}
+.mm-wrap{background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.mm-wrap iframe{width:100%;height:580px;border:none;display:block}
+@media(max-width:600px){.hdr-title{font-size:15px}.tab{padding:10px 11px;font-size:11px}.fc-grid{grid-template-columns:1fr}.main{padding:14px 11px 40px}}
+
+/* ── AI 대화창 ── */
+.chat-wrap{display:flex;flex-direction:column;height:calc(100vh - 160px);min-height:480px}
+.chat-intro{background:var(--blue);border-radius:12px;padding:14px 16px;margin-bottom:14px;color:#fff;flex-shrink:0}
+.chat-intro-title{font-family:'Noto Serif KR',serif;font-size:13.5px;font-weight:700;color:var(--accent);margin-bottom:5px}
+.chat-intro-text{font-size:11.5px;line-height:1.7;opacity:.85}
+.chat-preparing{background:var(--red-l);border:1px solid var(--red);border-radius:8px;padding:8px 12px;margin-bottom:8px;font-size:11.5px;font-weight:700;color:var(--red);flex-shrink:0;text-align:center;letter-spacing:.3px}
+.chat-notice{background:var(--gold-l);border:1px solid var(--accent);border-radius:8px;padding:8px 12px;margin-bottom:12px;font-size:11px;line-height:1.6;color:var(--gold);flex-shrink:0}
+.chat-msgs{flex:1;overflow-y:auto;padding:4px 0 10px;display:flex;flex-direction:column;gap:10px}
+.chat-msgs::-webkit-scrollbar{width:4px}
+.chat-msgs::-webkit-scrollbar-thumb{background:#ccc;border-radius:2px}
+.msg{max-width:88%;display:flex;flex-direction:column;gap:3px}
+.msg.user{align-self:flex-end;align-items:flex-end}
+.msg.ai{align-self:flex-start;align-items:flex-start}
+.msg-bubble{padding:10px 13px;border-radius:14px;font-size:12.5px;line-height:1.75;word-break:keep-all}
+.msg.user .msg-bubble{background:var(--blue);color:#fff;border-bottom-right-radius:4px}
+.msg.ai .msg-bubble{background:#fff;border:1px solid var(--line);color:#1a1a1a;border-bottom-left-radius:4px;white-space:pre-wrap}
+.msg-time{font-size:10px;color:#aaa;padding:0 4px}
+.chat-typing{align-self:flex-start}
+.chat-typing .msg-bubble{background:#fff;border:1px solid var(--line)}
+.typing-dots{display:flex;gap:4px;align-items:center;padding:2px 4px}
+.typing-dots span{width:6px;height:6px;border-radius:50%;background:#aaa;animation:tdot 1.2s infinite}
+.typing-dots span:nth-child(2){animation-delay:.2s}
+.typing-dots span:nth-child(3){animation-delay:.4s}
+@keyframes tdot{0%,80%,100%{transform:scale(1);opacity:.5}40%{transform:scale(1.3);opacity:1}}
+.chat-input-row{display:flex;gap:8px;margin-top:10px;flex-shrink:0}
+.chat-input{flex:1;padding:10px 13px;border:1.5px solid var(--line);border-radius:22px;font-size:13px;font-family:'Noto Sans KR',sans-serif;outline:none;resize:none;line-height:1.5;background:#fff;transition:border-color .2s;max-height:90px;overflow-y:auto}
+.chat-input:focus{border-color:var(--blue-m)}
+.chat-send{width:40px;height:40px;border-radius:50%;background:var(--blue);color:#fff;border:none;cursor:pointer;font-size:17px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s;align-self:flex-end}
+.chat-send:hover{background:#0f3570}
+.chat-send:disabled{background:#aaa;cursor:default}
+.chat-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;flex-shrink:0}
+.chip{padding:5px 11px;border-radius:15px;font-size:11px;font-weight:700;background:var(--blue-l);color:var(--blue);border:1px solid #c5d5ee;cursor:pointer;transition:all .15s;font-family:'Noto Sans KR',sans-serif}
+.chip:hover{background:var(--blue);color:#fff}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="hdr-eyebrow">1행2필 · HOW TO 5급공채·자격증 행정법 실전답안 · 5급공채·자격증형</div>
+  <div class="hdr-title">행정소송의 한계 — 실전답안 목차훈련</div>
+  <div class="hdr-sub">무명항고소송(의무이행소송·예방적 금지소송) · 통치행위 · 답안 목차흐름 중심</div>
+</div>
+<nav class="tabs">
+  <div class="tab-inner">
+    <button class="tab on" onclick="switchTab('summary')">📋 요약노트</button>
+    <button class="tab"    onclick="switchTab('flash')">🃏 플래시카드</button>
+    <button class="tab"    onclick="switchTab('quiz')">✅ OX퀴즈</button>
+    <button class="tab"    onclick="switchTab('memory')">📝 필수암기문장</button>
+    <button class="tab"    onclick="switchTab('source')">🧭 목차흐름 익히기</button>
+    <button class="tab"    onclick="switchTab('map')">🗺️ 마인드맵</button>
+    <button class="tab"    onclick="switchTab('chat')">💬 AI 대화창 (준비중)</button>
+  </div>
+</nav>
+<div class="main">
+
+<!-- ══ TAB 1 · 요약노트 ══ -->
+<div id="panel-summary" class="panel on">
+<div class="card"><div class="card-head ch-blue">📐 행정소송의 한계 — 답안은 &lsquo;구조&rsquo;로 쓴다</div><div class="card-body">
+<div class="body-text">이 단원은 개념 암기가 아니라 <span class="hl">답안 목차를 세우는 훈련</span>이다. 모든 문제는 <span class="kw">대전제 → 소전제 → 판례 → 사안 포섭 → 소결 → 설문의 해결</span>의 뼈대로 풀린다.</div>
+<div class="alert al-blue" style="margin-top:10px"><div class="alert-label">📌 5급공채·자격증형 핵심</div>
+대전제(근거 법조문)를 <span class="hl">답안 본문(Ⅰ 문제의 소재)에 직접 작성</span>한다. 조문을 명시한 뒤 소전제로 이어간다.
+</div></div></div>
+
+<div class="card"><div class="card-head ch-green">① 의무이행소송 (무명항고소송)</div><div class="card-body">
+<div class="body-text">쟁점 2개 — ⓐ 법령의 취소 청구가 <span class="kw">법률상 분쟁</span>인가, ⓑ 환원 처분 청구(=<span class="hl">의무이행소송</span>)가 행정법원에 속하는 권한인가.</div>
+<table class="tbl" style="margin-top:10px"><thead><tr><th>단계</th><th>내용</th></tr></thead><tbody>
+<tr><td>대전제</td><td>법원조직법 §2①·행정소송법 §8② — 적법하려면 ⓐ법률상 분쟁 ⓑ행정법원 권한</td></tr>
+<tr><td>소전제②</td><td>행정소송법 §3·§4 — 항고소송은 취소·무효등확인·부작위위법확인 3종(법정주의)</td></tr>
+<tr><td>판례</td><td>대판 94누14018 — 의무이행소송은 허용되지 아니한다</td></tr>
+<tr><td>결론</td><td>법령 취소 청구·환원 처분 청구 모두 적법하게 인정될 수 없다</td></tr>
+</tbody></table></div></div>
+
+<div class="card"><div class="card-head ch-gold">② 예방적 금지소송 (무명항고소송)</div><div class="card-body">
+<div class="body-text">청구취지 &ldquo;피고는 乙에게 건축허가를 하여서는 아니 된다&rdquo; = <span class="hl">예방적 금지소송</span>. 행정법원에 속하는 소송형식인가.</div>
+<div class="alert al-gold" style="margin-top:10px"><div class="alert-label">📌 뼈대</div>
+학설(부정설·긍정설·제한적 허용설) → 판례(부작위 청구 부적법) → 검토(법정주의·제1차 판단권 사후통제 → 판례 타당) → <span class="kw">현행 행정소송법상 허용될 수 없다</span></div></div></div>
+
+<div class="card"><div class="card-head ch-red">③ 통치행위 (파병결정)</div><div class="card-body">
+<div class="body-text">쟁점 2개 — ⓐ 파병결정이 <span class="kw">항고소송 대상 처분</span>인가, ⓑ <span class="hl">통치행위</span>인가.</div>
+<table class="tbl" style="margin-top:10px"><thead><tr><th>소전제</th><th>판례</th><th>포섭</th></tr></thead><tbody>
+<tr><td>① 처분성</td><td>국민의 권리·의무에 직접 관계있는 행위</td><td>파병결정 = 처분(강학상 하명)</td></tr>
+<tr><td>② 통치행위</td><td>고도의 정치성 국가행위 → 사법심사 자제</td><td>파병결정 = 통치행위</td></tr>
+</tbody></table>
+<div class="alert al-blue" style="margin-top:10px"><div class="alert-label">📌 결론</div>처분이나, 사법심사가 자제되는 통치행위 → <span class="hl">항고소송의 대상이 되지 않는다</span></div></div></div>
+
+</div>
+
+
+<!-- ══ TAB 2 · 플래시카드 ══ -->
+<div id="panel-flash" class="panel"><div class="fc-grid"><div class="fc-wrap" onclick="this.classList.toggle('flip')"><div class="fc-inner"><div class="fc-f"><div class="fc-ico">⚖️</div><div class="fc-term">의무이행소송</div><div class="fc-hint">탭하여 뒤집기</div></div><div class="fc-b "><div class="fc-bt">대판 94누14018 · 부정설</div><ul><li>항고소송 3종=취소·무효등확인·부작위위법확인(§3·§4)</li><li>예시적 해석은 부작위위법확인소송을 사문화 → 입법자 의사 반</li><li>부정설·판례 타당 → 행정법원 권한 아님</li></ul></div></div></div><div class="fc-wrap" onclick="this.classList.toggle('flip')"><div class="fc-inner"><div class="fc-f"><div class="fc-ico">📌</div><div class="fc-term">법률상 분쟁의 한계</div><div class="fc-hint">탭하여 뒤집기</div></div><div class="fc-b gn"><div class="fc-bt">추상적 규범통제</div><ul><li>법률상 쟁송=권리주체 간 구체적 법률관계의 법률상 이익 분쟁</li><li>법령 자체를 다투는 분쟁 = 법률상 분쟁 아님</li><li>→ 추상적 규범통제로 부적법</li></ul></div></div></div><div class="fc-wrap" onclick="this.classList.toggle('flip')"><div class="fc-inner"><div class="fc-f"><div class="fc-ico">🚫</div><div class="fc-term">예방적 금지소송</div><div class="fc-hint">탭하여 뒤집기</div></div><div class="fc-b "><div class="fc-bt">부작위 청구 부적법</div><ul><li>장래 처분을 미리 저지하는 소송형식</li><li>학설: 부정설/긍정설/제한적 허용설</li><li>판례: 준공처분 부작위 청구 = 부적법</li><li>법정주의·제1차 판단권 → 허용 안 됨</li></ul></div></div></div><div class="fc-wrap" onclick="this.classList.toggle('flip')"><div class="fc-inner"><div class="fc-f"><div class="fc-ico">🪖</div><div class="fc-term">통치행위 — 처분성</div><div class="fc-hint">탭하여 뒤집기</div></div><div class="fc-b gn"><div class="fc-bt">강학상 하명</div><ul><li>처분=국민 권리·의무에 직접 관계있는 행위</li><li>파병결정=전투원에 해외파견·작전수행 의무 부담 명함</li><li>→ 항고소송 대상 처분(하명)</li></ul></div></div></div><div class="fc-wrap" onclick="this.classList.toggle('flip')"><div class="fc-inner"><div class="fc-f"><div class="fc-ico">⚖️</div><div class="fc-term">통치행위 — 사법심사</div><div class="fc-hint">탭하여 뒤집기</div></div><div class="fc-b "><div class="fc-bt">고도의 정치성</div><ul><li>학설: 통치행위 부정설 ↔ 긍정설(내재적 제약)</li><li>판례: 고도의 정치성 국가행위 → 사법심사 자제</li><li>파병결정=대통령의 고도 정치성 행위 → 통치행위</li></ul></div></div></div><div class="fc-wrap" onclick="this.classList.toggle('flip')"><div class="fc-inner"><div class="fc-f"><div class="fc-ico">🧩</div><div class="fc-term">무명항고소송 공통 논거</div><div class="fc-hint">탭하여 뒤집기</div></div><div class="fc-b gn"><div class="fc-bt">법정주의</div><ul><li>§4 항고소송 종류는 열거적·제한적</li><li>행정청의 제1차적 판단권 → 사후적 통제제도</li><li>명문 소송형식 외 무명항고소송 불허가 판례</li></ul></div></div></div></div>
+</div>
+
+
+<!-- ══ TAB 3 · OX퀴즈 ══ -->
+<div id="panel-quiz" class="panel">
+  <div class="score-bar"><span class="score-label">현재 점수</span><span class="score-num" id="snum">0 / 0</span><button class="reset-btn" onclick="resetQ()">↺ 다시 풀기</button></div>
+  <div id="qc"></div>
+</div>
+
+<!-- ══ TAB 4 · 필수암기문장 ══ -->
+<div id="panel-memory" class="panel">
+  <div class="mem-intro"><strong>📝 사용법</strong> — 검은 빈칸을 클릭하면 정답이 나타납니다.</div>
+  <div class="mem-progress">
+    <div class="mem-bar-wrap"><div class="mem-bar" id="prog-bar" style="width:0%"></div></div>
+    <div class="mem-prog-label" id="prog-label">0 / 0 공개</div>
+    <button class="mem-reveal-all" onclick="revealAll()">전체 공개</button>
+  </div><div class="mem-item"><div class="mem-item-head"><span class="mem-badge mb-case">판례</span><span class="mem-item-label">의무이행소송 (94누14018)</span><button class="mem-toggle-btn" onclick="revealItem(this)">문장 보기</button></div><div class="mem-body"><div class="mem-sentence-wrap"><div class="mem-sentence">검사에게 압수물 환부를 이행하라는 청구는 행정청의 부작위에 대하여 일정한 처분을 하도록 하는 <span class="mem-blank" onclick="toggleBlank(this)">의무이행소송</span>으로 현행 행정소송법상 <span class="mem-blank" onclick="toggleBlank(this)">허용되지 아니 한다</span>.<div class="mem-note mn-gold">대판 1995.3.10. 94누14018</div></div></div></div></div><div class="mem-item"><div class="mem-item-head"><span class="mem-badge mb-case">판례</span><span class="mem-item-label">예방적 금지소송</span><button class="mem-toggle-btn" onclick="revealItem(this)">문장 보기</button></div><div class="mem-body"><div class="mem-sentence-wrap"><div class="mem-sentence">피고에 대하여 이 사건 신축건물의 준공처분을 하여서는 아니 된다는 내용의 <span class="mem-blank" onclick="toggleBlank(this)">부작위를 구하는</span> 원고의 예비적 청구는 행정소송에서 <span class="mem-blank" onclick="toggleBlank(this)">허용되지 아니하는 것이므로 부적법하다</span>.</div></div></div></div><div class="mem-item"><div class="mem-item-head"><span class="mem-badge mb-case">판례</span><span class="mem-item-label">통치행위</span><button class="mem-toggle-btn" onclick="revealItem(this)">문장 보기</button></div><div class="mem-body"><div class="mem-sentence-wrap"><div class="mem-sentence">고도의 정치성을 띤 국가행위에 대하여는 이른바 <span class="mem-blank" onclick="toggleBlank(this)">통치행위</span>라 하여 법원 스스로 <span class="mem-blank" onclick="toggleBlank(this)">사법심사권의 행사를 억제</span>하여 그 심사대상에서 제외하는 영역이 있을 수 있다.</div></div></div></div><div class="mem-item"><div class="mem-item-head"><span class="mem-badge mb-case">판례</span><span class="mem-item-label">항고소송 대상 처분</span><button class="mem-toggle-btn" onclick="revealItem(this)">문장 보기</button></div><div class="mem-body"><div class="mem-sentence-wrap"><div class="mem-sentence">항고소송의 대상이 되는 처분이란 원칙적으로 행정청의 공법상 행위로서 특정 사항에 대하여 법규에 의한 권리의 설정 또는 의무의 부담을 명하거나 기타 법률상 효과를 직접 발생하게 하는 등 <span class="mem-blank" onclick="toggleBlank(this)">국민의 권리·의무에 직접 관계가 있는 행위</span>를 말한다.</div></div></div></div><div class="mem-item"><div class="mem-item-head"><span class="mem-badge mb-def">개념</span><span class="mem-item-label">의무이행소송 결론</span><button class="mem-toggle-btn" onclick="revealItem(this)">문장 보기</button></div><div class="mem-body"><div class="mem-sentence-wrap"><div class="mem-sentence">항고소송의 종류를 예시적으로 해석하면 명문으로 인정된 <span class="mem-blank" onclick="toggleBlank(this)">부작위위법확인소송을 사문화</span>시켜 입법자의 의사에 반하므로, 의무이행소송은 <span class="mem-blank" onclick="toggleBlank(this)">행정법원에 속하는 권한이 아니다</span>.</div></div></div></div><div class="mem-item"><div class="mem-item-head"><span class="mem-badge mb-def">개념</span><span class="mem-item-label">통치행위 결론</span><button class="mem-toggle-btn" onclick="revealItem(this)">문장 보기</button></div><div class="mem-body"><div class="mem-sentence-wrap"><div class="mem-sentence">대통령의 파병결정은 항고소송 대상 처분이나, <span class="mem-blank" onclick="toggleBlank(this)">사법심사가 자제되는 통치행위</span>이므로 <span class="mem-blank" onclick="toggleBlank(this)">항고소송의 대상이 되지 않는다</span>.</div></div></div></div>
+</div>
+
+
+<!-- ══ TAB 5 · 문제의 소재 ══ -->
+<div id="panel-source" class="panel">
+<div class="ms-intro"><div class="ms-intro-title">🧭 목차흐름 익히기</div><div class="ms-intro-text">개념 이해가 아니라 <b>답안을 쓰는 순서</b>를 몸에 익힌다. 각 논점을 대전제(답안에 명시) → 소전제 → 판례 → 사안 포섭 → 설문의 해결 흐름으로 현출한다.</div></div>
+
+<div class="ms-section"><div class="ms-section-title">① 의무이행소송</div><div class="ms-body"><div class="ms-step"><div class="ms-step-num gn">1</div><div class="ms-step-content"><div class="ms-step-label gn">대전제 (답안에 명시)</div><div class="ms-step-text">법원조직법 §2①·행정소송법 §8② — 적법하려면 ⓐ법률상 분쟁 ⓑ행정법원 권한 / 행정소송법 §3·§4 — 항고소송 3종</div></div></div><div class="ms-step"><div class="ms-step-num gd">2</div><div class="ms-step-content"><div class="ms-step-label gd">소전제·판례</div><div class="ms-step-text">① 법률상 쟁송의 의의 → 법령분쟁은 추상적 규범통제(법률상 분쟁 아님) / ② 판례 대판 94누14018 — 의무이행소송 불허</div></div></div><div class="ms-step"><div class="ms-step-num ">3</div><div class="ms-step-content"><div class="ms-step-label ">사안 포섭·해결</div><div class="ms-step-text">의무이행소송은 행정법원에 속하는 권한이 아니다 → 법령 취소·환원 처분 청구 모두 적법하게 인정될 수 없다</div></div></div><div class="ms-keyword-box"><div class="ms-keyword-title">답안 목차</div><div class="ms-keywords"><span class="ms-kw">대전제 §2①·§8②</span><span class="ms-kw">법률상 분쟁</span><span class="ms-kw">§3·§4 항고소송</span><span class="ms-kw">94누14018</span><span class="ms-kw">설문의 해결</span></div></div></div></div>
+
+<div class="ms-section"><div class="ms-section-title gn">② 예방적 금지소송</div><div class="ms-body"><div class="ms-step"><div class="ms-step-num gn">1</div><div class="ms-step-content"><div class="ms-step-label gn">대전제 (답안에 명시)</div><div class="ms-step-text">행정소송법 §3·§4 — 항고소송 3종(취소·무효등확인·부작위위법확인)</div></div></div><div class="ms-step"><div class="ms-step-num gd">2</div><div class="ms-step-content"><div class="ms-step-label gd">학설·판례·검토</div><div class="ms-step-text">학설(부정설/긍정설/제한적 허용설) → 판례(준공처분 부작위 청구 부적법) → 검토(법정주의·제1차 판단권 사후통제 → 판례 타당)</div></div></div><div class="ms-step"><div class="ms-step-num ">3</div><div class="ms-step-content"><div class="ms-step-label ">사안 포섭·해결</div><div class="ms-step-text">예방적 금지소송은 행정법원의 권한에 속하지 아니한다 → 현행 행정소송법상 허용될 수 없다</div></div></div><div class="ms-keyword-box"><div class="ms-keyword-title">답안 목차</div><div class="ms-keywords"><span class="ms-kw">§3·§4 항고소송</span><span class="ms-kw">예방적 금지소송</span><span class="ms-kw">학설 3설</span><span class="ms-kw">부적법 판례</span><span class="ms-kw">설문의 해결</span></div></div></div></div>
+
+<div class="ms-section"><div class="ms-section-title gd">③ 통치행위</div><div class="ms-body"><div class="ms-step"><div class="ms-step-num gn">1</div><div class="ms-step-content"><div class="ms-step-label gn">대전제 (답안에 명시)</div><div class="ms-step-text">행정소송법 §38·§19·§2①ⅰ — 처분 정의 (소거되는 소전제: 파병결정=구체적 사실 법집행)</div></div></div><div class="ms-step"><div class="ms-step-num gd">2</div><div class="ms-step-content"><div class="ms-step-label gd">소전제①·② + 판례</div><div class="ms-step-text">① 처분성: 판례(국민 권리·의무 직접 관계) → 파병결정=처분(하명) / ② 통치행위: 학설·판례(고도의 정치성 → 사법심사 자제) → 통치행위</div></div></div><div class="ms-step"><div class="ms-step-num ">3</div><div class="ms-step-content"><div class="ms-step-label ">사안 포섭·해결</div><div class="ms-step-text">파병결정은 항고소송 대상 처분이나, 사법심사가 자제되는 통치행위 → 항고소송의 대상이 되지 않는다</div></div></div><div class="ms-keyword-box"><div class="ms-keyword-title">답안 목차</div><div class="ms-keywords"><span class="ms-kw">처분 정의 §2①ⅰ</span><span class="ms-kw">처분성 판례</span><span class="ms-kw">통치행위 학설</span><span class="ms-kw">고도의 정치성</span><span class="ms-kw">설문의 해결</span></div></div></div></div>
+
+</div>
+
+
+<!-- ══ TAB 6 · 마인드맵 ══ -->
+<div id="panel-map" class="panel"><div class="mm-wrap"><iframe id="mm-frame" sandbox="allow-scripts allow-same-origin" srcdoc=""></iframe></div></div>
+
+<!-- ══ TAB 7 · AI 대화창 ══ -->
+<div id="panel-chat" class="panel">
+  <div class="chat-wrap">
+    <div class="chat-intro">
+      <div class="chat-intro-title">💬 AI 강의 도우미 — 준비 중</div>
+      <div style="font-size:12px;color:#888;line-height:1.8;margin-top:8px">
+        실전답안 목차훈련용 AI 대화창은 <b>현재 준비 중</b>입니다.<br>
+        지금은 요약노트·플래시카드·OX퀴즈·필수암기문장·목차흐름·마인드맵으로 학습하세요.
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<script>
+
+function switchTab(name){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  var map={summary:0,flash:1,quiz:2,memory:3,source:4,map:5,chat:6};
+  document.getElementById('panel-'+name).classList.add('on');
+  document.querySelectorAll('.tab')[map[name]].classList.add('on');
+  if(name==='map') initMap();
+  if(name==='memory') updateProgress();
+  
+}
+function toggleBlank(el){el.classList.toggle('show');updateProgress();}
+function revealItem(btn){
+  var item=btn.closest('.mem-item'),body=item.querySelector('.mem-body'),blanks=item.querySelectorAll('.mem-blank'),isRev=btn.classList.contains('revealed');
+  if(!isRev){body.style.display='block';blanks.forEach(b=>b.classList.add('show'));btn.textContent='다시 가리기';btn.classList.add('revealed');}
+  else{blanks.forEach(b=>b.classList.remove('show'));btn.textContent='문장 보기';btn.classList.remove('revealed');}
+  updateProgress();
+}
+function revealAll(){
+  document.querySelectorAll('#panel-memory .mem-blank').forEach(b=>b.classList.add('show'));
+  document.querySelectorAll('#panel-memory .mem-body').forEach(b=>b.style.display='block');
+  document.querySelectorAll('#panel-memory .mem-toggle-btn').forEach(btn=>{btn.textContent='다시 가리기';btn.classList.add('revealed');});
+  updateProgress();
+}
+function updateProgress(){
+  var all=document.querySelectorAll('#panel-memory .mem-blank').length;
+  var shown=document.querySelectorAll('#panel-memory .mem-blank.show').length;
+  document.getElementById('prog-label').textContent=shown+' / '+all+' 공개';
+  document.getElementById('prog-bar').style.width=(all?shown/all*100:0)+'%';
+}
+var qState=[],qAns=0,qCor=0;
+function buildQ(){
+  qState=qData.map(()=>null);qAns=0;qCor=0;updateS();
+  var c=document.getElementById('qc');c.innerHTML='';
+  qData.forEach(function(item,i){
+    var d=document.createElement('div');d.className='qi';d.id='qi'+i;
+    d.innerHTML='<div class="qi-q"><div class="qi-qn">Q'+(i+1)+' / '+qData.length+'</div>'+item.q+'</div>'
+      +'<div class="qi-btns"><button class="ox" id="o'+i+'" onclick="ansQ('+i+',true)">⭕</button>'
+      +'<button class="ox" id="x'+i+'" onclick="ansQ('+i+',false)">❌</button></div>'
+      +'<div class="qi-exp" id="e'+i+'"><div class="qi-v" id="v'+i+'"></div><div id="t'+i+'"></div></div>';
+    c.appendChild(d);
+  });
+}
+function ansQ(i,ua){
+  if(qState[i]!==null)return;qState[i]=ua;qAns++;
+  var ok=ua===qData[i].a;if(ok)qCor++;updateS();
+  document.getElementById('qi'+i).classList.add(ok?'correct':'wrong');
+  document.getElementById('o'+i).disabled=true;document.getElementById('x'+i).disabled=true;
+  (ua?document.getElementById('o'+i):document.getElementById('x'+i)).classList.add(ok?'sc':'sw');
+  var exp=document.getElementById('e'+i);
+  document.getElementById('v'+i).textContent=ok?'✅ 정답':'❌ 오답';
+  document.getElementById('v'+i).className='qi-v '+(ok?'ok':'ng');
+  document.getElementById('t'+i).textContent=qData[i].e;
+  exp.style.display='block';exp.className='qi-exp '+(ok?'cok':'cng');
+}
+function updateS(){document.getElementById('snum').textContent=qCor+' / '+qAns;}
+function resetQ(){buildQ();}
+
+var qData=[
+{"q":"의무이행소송은 행정소송법 제4조의 항고소송을 예시적 규정으로 해석하여 무명항고소송으로 허용될 수 있다.","a":false,"e":"판례(대판 94누14018)와 부정설에 따르면 항고소송의 종류를 예시적으로 해석하면 명문으로 인정된 부작위위법확인소송을 사문화시켜 입법자의 의사에 반하므로, 의무이행소송은 현행 행정소송법상 허용되지 아니한다."},
+{"q":"검사에게 압수물 환부를 이행하라는 청구는 의무이행소송으로서 현행 행정소송법상 허용되지 아니한다.","a":true,"e":"대판 1995.3.10. 94누14018 — 검사에게 압수물 환부를 이행하라는 청구는 행정청의 부작위에 대하여 일정한 처분을 하도록 하는 의무이행소송으로 현행 행정소송법상 허용되지 아니한다."},
+{"q":"법령의 취소를 청구하는 행정소송은 행정법원이 심판하는 법률상 분쟁에 해당한다.","a":false,"e":"법령을 둘러싼 분쟁은 법령의 효력·해석 자체를 다투는 것으로 구체적·현실적 권리의무에 관한 분쟁이 아니어서 법률상 분쟁이 아니며, 추상적 규범통제의 문제에 해당한다."},
+{"q":"&lsquo;피고는 소외 乙에게 건축허가를 하여서는 아니 된다&rsquo;는 청구는 예방적 금지소송으로서 현행 행정소송법상 허용되지 아니한다.","a":true,"e":"장래의 행정행위 발동을 미리 저지하는 예방적 금지소송은 소송형식이 열거된 점, 법정주의, 행정청의 제1차적 판단권에 대한 사후적 통제제도라는 점에서 판례상 허용되지 아니한다."},
+{"q":"예방적 금지소송은 처분요건이 일의적이면 언제나 허용된다는 것이 판례의 태도이다.","a":false,"e":"처분요건 일의성 등은 제한적 허용설의 논거일 뿐, 판례는 부작위를 구하는 예비적 청구가 행정소송에서 허용되지 아니하여 부적법하다고 하여 부정설의 입장이다."},
+{"q":"학설 중 제한적 허용설은 처분요건이 일의적이고, 사전에 구제하지 않으면 회복할 수 없는 손해가 발생하며, 다른 구제방법이 없는 경우에 무명항고소송을 인정한다.","a":true,"e":"제한적 허용설은 원칙적으로 허용할 수 없으나 처분요건이 일의적이고, 사전 구제하지 않으면 회복불능 손해가 발생하며, 다른 구제방법이 없는 경우 예외적으로 인정한다는 견해이다."},
+{"q":"대통령의 파병결정은 국민의 권리·의무에 직접 관계가 없으므로 항고소송의 대상이 되는 처분이 아니다.","a":false,"e":"파병결정은 전투원 乙·丙에게 해외파견근무의무·작전수행의무의 부담을 명하는 행위이므로 국민의 권리·의무에 직접 관계가 있는 행위로서 항고소송의 대상이 되는 처분(강학상 하명)이다."},
+{"q":"고도의 정치성을 띤 국가행위에 대하여는 통치행위로서 법원 스스로 사법심사권의 행사를 억제하여 심사대상에서 제외하는 영역이 있을 수 있다.","a":true,"e":"판례는 고도의 정치성을 띤 국가행위에 대하여는 이른바 통치행위라 하여 법원 스스로 사법심사권의 행사를 억제하여 그 심사대상에서 제외하는 영역이 있을 수 있다고 본다."},
+{"q":"대통령의 파병결정은 항고소송의 대상이 되는 처분이므로 항고소송의 대상이 된다.","a":false,"e":"파병결정은 항고소송의 대상이 되는 처분이나, 대통령이 행한 고도의 정치성을 띤 국가행위로서 사법심사가 자제되는 통치행위이므로 결국 항고소송의 대상이 되지 않는다."}
+];
+buildQ();
+var mmInit=false;
+function initMap(){
+  if(mmInit)return;mmInit=true;
+  var info={
+  "의무이행소송": ["행정소송법 §3·§4 항고소송 3종(법정주의)","대판 94누14018 — 의무이행소송 불허","예시적 해석은 부작위위법확인소송 사문화 → 부정설·판례","결론: 행정법원 권한 아님"],
+  "법률상분쟁한계": ["법률상 쟁송=권리주체 간 구체적 법률관계의 법률상 이익 분쟁","법령 자체를 다투는 분쟁 = 법률상 분쟁 아님","→ 추상적 규범통제로 부적법"],
+  "예방적금지소송": ["장래 처분을 미리 저지하는 소송형식","학설: 부정설/긍정설/제한적 허용설","판례: 준공처분 부작위 청구 부적법","법정주의·제1차 판단권 → 허용 안 됨"],
+  "처분성": ["처분=국민 권리·의무에 직접 관계있는 행위","파병결정=해외파견·작전수행 의무 부담 명함","→ 처분(강학상 하명)"],
+  "통치행위판단": ["학설: 부정설 ↔ 긍정설(내재적 제약)","판례: 고도의 정치성 국가행위 → 사법심사 자제","파병결정=통치행위 → 항고소송 대상 아님"]
+};
+  var tree={"name":"행정소송의 한계","depth":0,"children":[
+    {"name":"무명항고소송","depth":1,"children":[
+      {"name":"의무이행소송",depth:3},{"name":"법률상분쟁한계",depth:3},{"name":"예방적금지소송",depth:3}
+    ]},
+    {"name":"통치행위","depth":1,"children":[
+      {"name":"처분성",depth:3},{"name":"통치행위판단",depth:3}
+    ]}
+  ]};
+  var src=`<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">
+<style>*{box-sizing:border-box;margin:0;padding:0;}body{background:#f7f5f0;font-family:'Noto Sans KR',sans-serif;overflow:hidden;height:100vh;}.wrap{display:flex;height:100vh;}#area{flex:0 0 65%;position:relative;overflow:hidden;border-right:2px solid #e0dcd4;}#detail{flex:0 0 35%;padding:18px 14px;overflow-y:auto;background:#fff;}#detail h3{font-size:12px;font-weight:700;color:#1a4b8c;margin-bottom:8px;border-bottom:2px solid #1a4b8c;padding-bottom:5px;}#detail ul{list-style:none;}#detail ul li{font-size:11px;line-height:1.7;padding:3px 0;border-bottom:1px dashed #e0dcd4;}#detail ul li::before{content:"▸";color:#1a4b8c;margin-right:5px;}#hint{font-size:10px;color:#aaa;margin-top:6px;}svg{width:100%;height:100%;}</style></head><body>
+<div class="wrap"><div id="area"><svg id="svg"></svg></div><div id="detail"><h3 id="dp-t">노드를 클릭하세요</h3><ul id="dp-l"></ul><div id="hint">끝 노드를 클릭하면 상세 설명이 표시됩니다.</div></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"><\/script>
+<script>
+var info=${JSON.stringify(info)};
+var tree=${JSON.stringify(tree)};
+var w=document.getElementById('area').clientWidth||480,h=580;
+var svg=d3.select('#svg').attr('width',w).attr('height',h);
+var g=svg.append('g');
+svg.call(d3.zoom().scaleExtent([.3,2]).on('zoom',e=>g.attr('transform',e.transform)));
+var fn=d3.tree().nodeSize([32,145]);
+var root=d3.hierarchy(tree);fn(root);
+g.selectAll('.lk').data(root.links()).join('path').attr('fill','none').attr('stroke','#c8d8ee').attr('stroke-width',1.5).attr('d',d3.linkHorizontal().x(d=>d.y).y(d=>d.x));
+var node=g.selectAll('.nd').data(root.descendants()).join('g').attr('transform',d=>'translate('+d.y+','+d.x+')');
+function mkNode(el,label,opt){var tmp=el.append('text').attr('dy','.35em').style('font-size',opt.fs).style('visibility','hidden').text(label);var bb={width:55,height:12};try{bb=tmp.node().getBBox();}catch(e){}tmp.remove();var ph=opt.ph||8,pv=opt.pv||5,rw=bb.width+ph*2,rh=bb.height+pv*2;el.insert('rect','text').attr('x',-rw/2).attr('y',-rh/2).attr('width',rw).attr('height',rh).attr('rx',opt.rx||5).style('fill',opt.fill).style('stroke',opt.stroke||'none').style('stroke-width',opt.sw||'1.5');el.append('text').attr('dy','.35em').attr('text-anchor','middle').style('font-size',opt.fs).style('font-weight',opt.fw||'400').style('font-family','Noto Sans KR,sans-serif').style('fill',opt.color).text(label);}
+node.filter(d=>d.depth===0).each(function(d){mkNode(d3.select(this),d.data.name,{fs:'12px',fw:'700',fill:'#1a4b8c',color:'#fff',ph:12,pv:7,rx:8});});
+node.filter(d=>d.depth===1).each(function(d,i){var cs=['#1a4b8c','#1a6644','#7a5c00','#a02020'];var c=cs[i%cs.length];mkNode(d3.select(this),d.data.name,{fs:'11px',fw:'700',fill:'#fff',color:c,stroke:c,sw:'2',ph:10,pv:6,rx:16});});
+node.filter(d=>!d.children).each(function(d){var el=d3.select(this);mkNode(el,d.data.name,{fs:'10px',fw:'400',fill:'#f0f4fb',color:'#1a4b8c',stroke:'#c0d0e8',sw:'1',ph:6,pv:4,rx:4});el.style('cursor','pointer').on('mouseover',function(){d3.select(this).select('rect').style('fill','#dde8f8');}).on('mouseout',function(){d3.select(this).select('rect').style('fill','#f0f4fb');}).on('click',function(){var i=info[d.data.name];if(!i)return;document.getElementById('dp-t').textContent=d.data.name;var ul=document.getElementById('dp-l');ul.innerHTML='';i.forEach(function(item){var li=document.createElement('li');li.textContent=item;ul.appendChild(li);});document.getElementById('hint').style.display='none';});});
+var bds=g.node().getBBox();g.attr('transform','translate('+(w/2-bds.x-bds.width/2)+','+(h/2-bds.y-bds.height/2)+')');
+<\/script></body></html>`;
+  document.getElementById('mm-frame').srcdoc=src;
+}
+
+// ── AI 대화창 ──
+var CHAT_KEY = 'haenggye_5gup_chat';
+var CHAT_TTL = 7 * 24 * 60 * 60 * 1000; // 7일
+var chatHistory = [];
+
+var SYSTEM_PROMPT = `당신은 「1행2필 HOW TO 변시 행정법 실전답안」의 AI 답안 코치입니다.
+단원: 행정소송의 한계 (무명항고소송·통치행위) / 판본: 5급공채·자격증형.
+핵심 내용: 의무이행소송(대판 94누14018 — 현행 행정소송법상 허용되지 아니한다), 예방적 금지소송(준공처분 부작위 청구 부적법), 통치행위(파병결정 — 항고소송 대상 처분이나 고도의 정치성으로 사법심사가 자제되는 통치행위 → 항고소송 대상 아님).
+답변 규칙: 1) 한국어. 2) 개념 이해가 아니라 답안 작성(대전제→소전제→판례→사안 포섭→설문의 해결) 중심으로 설명한다. 3) 5급공채·자격증형은 대전제(근거 법조문)를 답안 본문에 직접 작성한다. 4) 판례 문구는 전문 그대로 제시하고 축약하지 않는다. 5) 핵심을 먼저 말한 뒤 보충한다.`;
+
+function saveChat(){
+  try{
+    localStorage.setItem(CHAT_KEY, JSON.stringify({
+      ts: Date.now(),
+      history: chatHistory
+    }));
+  }catch(e){}
+}
+
+function loadChat(){
+  try{
+    var raw = localStorage.getItem(CHAT_KEY);
+    if(!raw) return false;
+    var data = JSON.parse(raw);
+    if(!data.ts || (Date.now() - data.ts) > CHAT_TTL){
+      localStorage.removeItem(CHAT_KEY);
+      return false;
+    }
+    chatHistory = data.history || [];
+    var msgs = document.getElementById('chatMsgs');
+    msgs.innerHTML = '';
+    chatHistory.forEach(function(m){
+      addMsg(m.role === 'user' ? 'user' : 'ai', m.content);
+    });
+    if(chatHistory.length > 0) document.getElementById('chips').style.display = 'none';
+    return chatHistory.length > 0;
+  }catch(e){
+    return false;
+  }
+}
+
+function chatWelcome(){
+  if(loadChat()) return;
+  addMsg('ai','안녕하세요! 제12강 관할법원과 행정심판전치주의 AI 도우미입니다. 개념 질문, OX 해설, 판례, 답안 작성법 등 무엇이든 물어보세요.');
+}
+
+function addMsg(role, text){
+  var msgs = document.getElementById('chatMsgs');
+  var div = document.createElement('div');
+  div.className = 'msg ' + role;
+  var now = new Date();
+  var t = now.getHours()+':'+(now.getMinutes()<10?'0':'')+now.getMinutes();
+  div.innerHTML = '<div class="msg-bubble"></div><div class="msg-time">'+t+'</div>';
+  div.querySelector('.msg-bubble').textContent = text;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return div;
+}
+
+function showTyping(){
+  var msgs = document.getElementById('chatMsgs');
+  var div = document.createElement('div');
+  div.className = 'msg ai chat-typing';
+  div.id = 'typing-indicator';
+  div.innerHTML = '<div class="msg-bubble"><div class="typing-dots"><span></span><span></span><span></span></div></div>';
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+function hideTyping(){
+  var el = document.getElementById('typing-indicator');
+  if(el) el.remove();
+}
+
+async function sendChat(){
+  var inp = document.getElementById('chatInput');
+  var text = inp.value.trim();
+  if(!text) return;
+  inp.value = ''; inp.style.height = '';
+  document.getElementById('chatSend').disabled = true;
+
+  addMsg('user', text);
+  chatHistory.push({role:'user', content: text});
+  saveChat();
+  document.getElementById('chips').style.display = 'none';
+
+  showTyping();
+
+  try {
+    var res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-6',
+        max_tokens:1000,
+        system: SYSTEM_PROMPT,
+        messages: chatHistory
+      })
+    });
+    var data = await res.json();
+    hideTyping();
+    var reply = (data.content && data.content[0] && data.content[0].text) ? data.content[0].text : '답변을 가져오지 못했습니다.';
+    addMsg('ai', reply);
+    chatHistory.push({role:'assistant', content: reply});
+    saveChat();
+  } catch(e){
+    hideTyping();
+    addMsg('ai','오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+  }
+  document.getElementById('chatSend').disabled = false;
+}
+
+function chipSend(el){
+  document.getElementById('chatInput').value = el.textContent;
+  el.parentNode.style.display='none';
+  sendChat();
+}
+
+function chatKey(e){
+  if(e.key==='Enter' && !e.shiftKey){e.preventDefault();sendChat();}
+}
+function autoResize(el){
+  el.style.height='auto';
+  el.style.height=Math.min(el.scrollHeight,90)+'px';
+}
+</script>
+</body>
+</html>
