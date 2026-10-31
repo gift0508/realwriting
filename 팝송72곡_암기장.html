@@ -29,6 +29,7 @@
   --ok:#57C891; --ok-bg:#163527; --bad:#F27B76; --bad-bg:#3A1C1C; color-scheme:dark}
 
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55}
 button,input,select,textarea{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
@@ -147,6 +148,19 @@ label.check{display:inline-flex;gap:6px;align-items:center;cursor:pointer;font-s
 .panel textarea{width:100%;min-height:110px;font-family:var(--f-mono);font-size:12px;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:20px;font-size:14px;z-index:20}
 
+/* player */
+.playerbar{position:fixed;left:0;right:0;bottom:0;z-index:15;background:var(--surface);border-top:1px solid var(--line);box-shadow:0 -8px 24px rgba(10,20,40,.10);padding-block:10px calc(10px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.pb-in{max-width:1240px;margin:0 auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pb-in+.pb-in{margin-top:8px}
+.pb-title{font-weight:600;font-size:14px;min-width:0;flex:1 1 140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pb-time{font-family:var(--f-mono);font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+#pb-seek{flex:4 1 220px;min-width:0;accent-color:var(--accent)}
+.btn.on{background:var(--mark);color:var(--mark-ink);border-color:transparent;font-weight:600}
+#pb-stamp{padding:10px 18px;font-size:15px}
+body.has-player .wrap{padding-bottom:170px}
+.ln .n.jump{cursor:pointer;color:var(--accent);text-decoration:underline dotted;text-underline-offset:3px}
+.song .aud{font-size:12px;color:var(--accent);margin-left:-2px}
+.song.active .aud{color:inherit}
 @media (max-width:860px){
   .layout{grid-template-columns:minmax(0,1fr)}
   aside.index{position:static;max-height:none}
@@ -171,6 +185,9 @@ label.check{display:inline-flex;gap:6px;align-items:center;cursor:pointer;font-s
     <div class="top-actions">
       <label class="btn primary" for="hwp-files">강의 자료 불러오기 (zip · hwp)</label>
       <input type="file" id="hwp-files" accept=".zip,.hwp" multiple hidden>
+      <label class="btn" for="audio-files">음악 불러오기</label>
+      <input type="file" id="audio-files" accept="audio/*,.mp3,.m4a,.wav,.ogg,.aac,.flac" multiple hidden>
+      <input type="file" id="audio-one" accept="audio/*,.mp3,.m4a,.wav,.ogg,.aac,.flac" hidden>
       <button class="btn" id="btn-backup" type="button">백업 · 복원</button>
     </div>
   </header>
@@ -206,6 +223,36 @@ label.check{display:inline-flex;gap:6px;align-items:center;cursor:pointer;font-s
     </aside>
 
     <main class="sheet" id="sheet"></main>
+  </div>
+</div>
+
+<audio id="player" preload="metadata"></audio>
+<div class="playerbar" id="playerbar" hidden>
+  <div class="pb-in">
+    <button class="btn primary" id="pb-play" type="button">재생</button>
+    <button class="btn small" id="pb-back" type="button" aria-label="5초 뒤로">−5초</button>
+    <button class="btn small" id="pb-fwd" type="button" aria-label="5초 앞으로">+5초</button>
+    <span class="pb-title" id="pb-title"></span>
+    <span class="pb-time" id="pb-time">0:00 / 0:00</span>
+    <input type="range" id="pb-seek" min="0" max="1000" value="0" step="1" aria-label="재생 위치">
+  </div>
+  <div class="pb-in" id="pb-tools">
+    <span class="seg" aria-label="재생 속도"><button type="button" data-prate="0.75">0.75×</button><button type="button" data-prate="0.9">0.9×</button><button type="button" data-prate="1">1.0×</button></span>
+    <button class="btn small" id="pb-ab" type="button">구간 반복</button>
+    <button class="btn small" id="pb-line" type="button" hidden>한 줄 반복</button>
+    <button class="btn small" id="pb-sync" type="button">줄 시간 맞추기</button>
+    <span class="pb-time" id="pb-hint"></span>
+    <span style="flex:1"></span>
+    <label class="btn small ghost" for="audio-one">음악 바꾸기</label>
+    <button class="btn small ghost danger" id="pb-remove" type="button">음악 빼기</button>
+  </div>
+  <div class="pb-in" id="pb-sync-row" hidden>
+    <button class="btn primary" id="pb-stamp" type="button">1번째 줄 시작</button>
+    <span class="pb-time" id="pb-sync-info">노래를 들으며 각 줄이 시작될 때 버튼(또는 스페이스바)을 누르세요</span>
+    <span style="flex:1"></span>
+    <button class="btn small" id="pb-sync-undo" type="button">한 줄 되돌리기</button>
+    <button class="btn small primary" id="pb-sync-done" type="button">저장하고 끝내기</button>
+    <button class="btn small ghost" id="pb-sync-cancel" type="button">취소</button>
   </div>
 </div>
 
@@ -253,7 +300,7 @@ const byId = id => ALL.find(s => s.id === id);
 
 /* ---------- storage (this browser only) ---------- */
 const KEY = 'popsong-memorizer.v1';
-let S = {lyrics:{}, progress:{}, current:'ex', mode:'read', showKo:true, showNote:true, rate:0.9, level:2};
+let S = {lyrics:{}, progress:{}, current:'ex', mode:'read', showKo:true, showNote:true, sync:{}, prate:1, rate:0.9, level:2};
 try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(S, JSON.parse(raw)); } catch(e) {}
 function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e) {} }
 
@@ -424,7 +471,7 @@ function renderList(){
     if (s.theme !== lastTheme) { html += `<div class="group-label">${esc(s.theme)}</div>`; lastTheme = s.theme; }
     const n = linesOf(s).length, p = pct(s);
     const chip = !n ? '<span class="chip">미입력</span>' : `<span class="chip ${p===100?'done':'has'}">${p}%</span>`;
-    html += `<button type="button" class="song${s.id===S.current?' active':''}" data-id="${s.id}"><span class="no">${s.example?'예시':s.no+'강'}</span><span class="t">${esc(s.title)}</span>${chip}</button>`;
+    html += `<button type="button" class="song${s.id===S.current?' active':''}" data-id="${s.id}"><span class="no">${s.example?'예시':s.no+'강'}</span><span class="t">${esc(s.title)}${AUD.has.has(s.id) ? ' <span class="aud" title="음악 있음">♪</span>' : ''}</span>${chip}</button>`;
   }
   listEl.innerHTML = html || '<p class="parse-info" style="padding:10px">검색 결과가 없습니다.</p>';
   const filled = SONGS.filter(s => linesOf(s).length).length;
@@ -437,7 +484,7 @@ listEl.addEventListener('click', e => {
   const b = e.target.closest('.song'); if (!b) return;
   stopSpeak(); S.current = b.dataset.id; editing = false; T = null; initialsOpen.clear(); revealedEn.clear(); save();
   document.getElementById('index').classList.remove('open'); document.getElementById('btn-list-toggle').textContent = '펼치기';
-  renderList(); renderSheet(); document.getElementById('sheet').scrollIntoView({block:'start', behavior:'smooth'});
+  renderList(); renderSheet(); loadAudio(); document.getElementById('sheet').scrollIntoView({block:'start', behavior:'smooth'});
 });
 document.getElementById('search').addEventListener('input', renderList);
 document.getElementById('btn-list-toggle').addEventListener('click', e => {
@@ -459,6 +506,7 @@ function renderSheet(){
     <div class="head-meta">${n ? `<span>${n}줄</span><span>·</span><span>암기 ${pct(s)}%</span>` : '<span>아직 가사를 넣지 않았습니다</span>'}
       ${s.example ? '' : `<span class="sep"></span><button class="btn small" type="button" id="btn-edit">${n ? '가사 수정' : '가사 넣기'}</button>`}
       ${n && !s.example ? `<button class="btn small ghost" type="button" id="btn-reset">암기 기록 초기화</button>` : ''}
+      ${!s.example && !AUD.has.has(s.id) ? `<label class="btn small" for="audio-one">음악 넣기</label>` : ''}
     </div></div>`;
 
   if (editing || (!n && !s.example)) { sheet.innerHTML = head + `<div class="body">${editorHTML(s)}</div>`; bindEditor(s); return; }
@@ -469,7 +517,7 @@ function renderSheet(){
   const rateSeg = `<span class="seg" aria-label="읽기 속도">${[0.7,0.9,1].map(r => `<button type="button" data-rate="${r}" aria-pressed="${S.rate===r}">${r===1?'1.0':r}×</button>`).join('')}</span>`;
 
   if (S.mode === 'read') {
-    tool = `${koToggle}<label class="check"><input type="checkbox" id="opt-hide-en" ${hideEn?'checked':''}> 영어 가리기</label>${lines.some(l => l.note) ? `<label class="check"><input type="checkbox" id="opt-note" ${S.showNote?'checked':''}> 강의 메모</label>` : ''}<span class="sep"></span>${rateSeg}<button class="btn small primary" type="button" id="btn-playall">${playAll?'멈춤':'전곡 듣기'}</button>`;
+    tool = `${koToggle}<label class="check"><input type="checkbox" id="opt-hide-en" ${hideEn?'checked':''}> 영어 가리기</label>${lines.some(l => l.note) ? `<label class="check"><input type="checkbox" id="opt-note" ${S.showNote?'checked':''}> 강의 메모</label>` : ''}<span class="sep"></span>${rateSeg}<button class="btn small primary" type="button" id="btn-playall">${AUD.has.has(s.id) ? '노래 처음부터' : (playAll?'멈춤':'전곡 읽어 주기')}</button>`;
     body = `<div class="lines">${lines.map((l,i) => {
       const hid = hideEn && !revealedEn.has(i);
       return `<div class="ln" data-i="${i}"><span class="n">${i+1}</span><div><div class="en${hid?' hidden-en':''}" data-reveal="${i}" ${hid?'title="눌러서 보기" tabindex="0"':''}>${esc(l.en)}</div>${S.showKo && koShown(lines,i) ? `<div class="ko">${esc(l.ko)}</div>` : ''}${S.showNote && l.note ? `<div class="note">${esc(l.note)}</div>` : ''}</div><button class="speak" type="button" data-say="${i}" aria-label="${i+1}번째 줄 듣기">${SPK}</button></div>`;
@@ -481,7 +529,7 @@ function renderSheet(){
     body = `<p class="parse-info" style="margin:0 0 10px">첫 글자만 보고 소리 내어 불러 보세요. 줄을 누르면 원문이 열립니다.</p><div class="lines initials">${lines.map((l,i) => {
       const open = initialsOpen.has(i);
       const shown = open ? esc(l.en) : tokens(l.en).map(t => t.core ? esc(t.pre) + esc(t.core[0]) + `<span class="gap">${'_'.repeat(Math.max(0,t.core.length-1))}</span>` + esc(t.post) : esc(t.pre)).join(' ');
-      return `<div class="ln${open?' open':''}"><span class="n">${i+1}</span><div><div class="en" data-toggle="${i}" tabindex="0" role="button" aria-expanded="${open}">${shown}</div>${S.showKo && koShown(lines,i) ? `<div class="ko">${esc(l.ko)}</div>` : ''}</div><button class="speak" type="button" data-say="${i}" aria-label="${i+1}번째 줄 듣기">${SPK}</button></div>`;
+      return `<div class="ln${open?' open':''}" data-i="${i}"><span class="n">${i+1}</span><div><div class="en" data-toggle="${i}" tabindex="0" role="button" aria-expanded="${open}">${shown}</div>${S.showKo && koShown(lines,i) ? `<div class="ko">${esc(l.ko)}</div>` : ''}</div><button class="speak" type="button" data-say="${i}" aria-label="${i+1}번째 줄 듣기">${SPK}</button></div>`;
     }).join('')}</div>`;
   }
   else if (S.mode === 'cloze') {
@@ -497,7 +545,7 @@ function renderSheet(){
       const html = tk.map((t,j) => pick.has(j)
         ? `${esc(t.pre)}<input class="blank" id="b${bi++}" data-ans="${esc(t.core)}" size="${Math.max(2,t.core.length)}" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="${i+1}번째 줄 빈칸">${esc(t.post)}`
         : esc(t.pre + t.core + t.post)).join(' ');
-      return `<div class="ln"><span class="n">${i+1}</span><div><div class="en">${html}</div>${S.showKo && koShown(lines,i) ? `<div class="ko">${esc(l.ko)}</div>` : ''}</div><button class="speak" type="button" data-say="${i}" aria-label="${i+1}번째 줄 듣기">${SPK}</button></div>`;
+      return `<div class="ln" data-i="${i}"><span class="n">${i+1}</span><div><div class="en">${html}</div>${S.showKo && koShown(lines,i) ? `<div class="ko">${esc(l.ko)}</div>` : ''}</div><button class="speak" type="button" data-say="${i}" aria-label="${i+1}번째 줄 듣기">${SPK}</button></div>`;
     }).join('')}</div>`;
   }
   else if (S.mode === 'test') {
@@ -533,7 +581,7 @@ function bindEditor(s){
     const p = parse(ta.value);
     if (!p.length) { info.textContent = '영어 가사 줄을 찾지 못했습니다. 가사를 붙여넣었는지 확인해 주세요.'; return; }
     const old = linesOf(s); S.lyrics[s.id] = p;
-    if (old.length !== p.length || old.some((l,i) => l.en !== p[i].en)) S.progress[s.id] = new Array(p.length).fill(0);
+    if (old.length !== p.length || old.some((l,i) => l.en !== p[i].en)) { S.progress[s.id] = new Array(p.length).fill(0); delete S.sync[s.id]; }
     editing = false; T = null; if (S.mode === 'test') S.mode = 'read'; save(); renderList(); renderSheet(); toast('저장했습니다');
   };
   document.getElementById('ed-file').onchange = e => { const f = e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = () => { ta.value = r.result; upd(); }; r.readAsText(f, 'utf-8'); };
@@ -602,19 +650,21 @@ function bindSheet(s){
   sheet.querySelectorAll('.tab').forEach(t => t.onclick = () => { stopSpeak(); S.mode = t.dataset.mode; save(); renderSheet(); });
   const ko = q('#opt-ko'); if (ko) ko.onchange = () => { S.showKo = ko.checked; save(); keepInputs(renderSheet); };
   sheet.querySelectorAll('[data-rate]').forEach(b => b.onclick = () => { S.rate = +b.dataset.rate; save(); sheet.querySelectorAll('[data-rate]').forEach(x => x.setAttribute('aria-pressed', x === b)); });
-  sheet.querySelectorAll('[data-say]').forEach(b => b.onclick = () => { stopSpeak(); speak(lines[+b.dataset.say].en); });
+  sheet.querySelectorAll('[data-say]').forEach(b => b.onclick = () => sayLine(s, +b.dataset.say));
+  decorateSync(s);
 
   if (S.mode === 'read') {
     const nt = q('#opt-note'); if (nt) nt.onchange = () => { S.showNote = nt.checked; save(); renderSheet(); };
     const he = q('#opt-hide-en'); he.onchange = () => { hideEn = he.checked; revealedEn.clear(); renderSheet(); };
     sheet.querySelectorAll('.hidden-en').forEach(el => { const f = () => { revealedEn.add(+el.dataset.reveal); el.classList.remove('hidden-en'); }; el.onclick = f; el.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); f(); } }; });
     q('#btn-playall').onclick = () => {
-      if (playAll) { stopSpeak(); q('#btn-playall').textContent = '전곡 듣기'; return; }
+      if (AUD.has.has(s.id) && AUD.id === s.id) { stopSpeak(); P.currentTime = 0; segEnd = null; P.play().catch(() => {}); return; }
+      if (playAll) { stopSpeak(); q('#btn-playall').textContent = '전곡 읽어 주기'; return; }
       stopSpeak(); playAll = true; q('#btn-playall').textContent = '멈춤';
       const rows = sheet.querySelectorAll('.ln');
       const step = i => {
         rows.forEach(r => r.classList.remove('playing'));
-        if (!playAll || i >= lines.length) { playAll = false; const b = q('#btn-playall'); if (b) b.textContent = '전곡 듣기'; return; }
+        if (!playAll || i >= lines.length) { playAll = false; const b = q('#btn-playall'); if (b) b.textContent = '전곡 읽어 주기'; return; }
         rows[i].classList.add('playing'); rows[i].scrollIntoView({block:'nearest', behavior:'smooth'});
         speak(lines[i].en, () => setTimeout(() => step(i+1), 350));
       };
@@ -651,7 +701,7 @@ function bindSheet(s){
     if (!T.queue.length) return;
     const i = T.queue[0], ans = q('#t-answer');
     if (ans && !T.revealed) { ans.oninput = () => { T.typed = ans.value; }; ans.onkeydown = e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); T.typed = ans.value; T.revealed = true; renderSheet(); } }; if (window.matchMedia('(min-width: 861px)').matches) ans.focus({preventScroll:true}); }
-    const say = q('#t-say'); if (say) say.onclick = () => { stopSpeak(); speak(lines[i].en); };
+    const say = q('#t-say'); if (say) say.onclick = () => sayLine(s, i);
     const rv = q('#t-reveal'); if (rv) rv.onclick = () => { T.typed = ans.value; T.revealed = true; renderSheet(); };
     const hn = q('#t-hint'); if (hn) hn.onclick = () => { q('#t-hint-box').textContent = tokens(lines[i].en).map(t => t.core ? t.pre + t.core[0] + '_'.repeat(Math.max(0,t.core.length-1)) + t.post : t.pre).join(' '); };
     const p = prog(s);
@@ -696,23 +746,196 @@ async function importFiles(files){
       if (!lines.length) { fail.push(j.name.split('/').pop()); continue; }
       const old = S.lyrics[s.id] || [];
       S.lyrics[s.id] = lines;
-      if (old.length !== lines.length || old.some((l,i) => l.en !== lines[i].en)) S.progress[s.id] = new Array(lines.length).fill(0);
+      if (old.length !== lines.length || old.some((l,i) => l.en !== lines[i].en)) { S.progress[s.id] = new Array(lines.length).fill(0); delete S.sync[s.id]; }
       ok++;
     } catch(e) { fail.push(j.name.split('/').pop()); }
   }
   save();
   if (ok && (S.current === 'ex' || !linesOf(byId(S.current)).length)) { const first = SONGS.find(s => linesOf(s).length); if (first) S.current = first.id; }
-  editing = false; T = null; renderList(); renderSheet();
+  editing = false; T = null; renderList(); renderSheet(); loadAudio();
   toast(jobs.length ? `${ok}곡을 불러왔습니다` + (fail.length ? ` · ${fail.length}개는 읽지 못했습니다` : '') : 'hwp 파일을 찾지 못했습니다');
   if (fail.length) console.log('읽지 못한 파일:', fail);
 }
 document.getElementById('hwp-files').addEventListener('change', e => { const fs = [...e.target.files]; e.target.value = ''; if (fs.length) { toast('자료를 읽는 중입니다…'); importFiles(fs).catch(() => toast('파일을 읽지 못했습니다. zip 또는 hwp 파일인지 확인해 주세요.')); } });
 
+/* ---------- music (stored in this browser's IndexedDB) ---------- */
+const P = document.getElementById('player');
+const AUD = {has:new Set(), id:null, url:null, mem:{}};
+let dbP = null;
+function db(){ return dbP || (dbP = new Promise((res, rej) => { try { const r = indexedDB.open('popsong-audio', 1); r.onupgradeneeded = () => r.result.createObjectStore('files'); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); } catch(e) { rej(e); } })); }
+async function idb(op, key, val){
+  const d = await db();
+  return new Promise((res, rej) => {
+    const t = d.transaction('files', op === 'get' || op === 'keys' ? 'readonly' : 'readwrite'), st = t.objectStore('files');
+    const r = op === 'get' ? st.get(key) : op === 'keys' ? st.getAllKeys() : op === 'put' ? st.put(val, key) : st.delete(key);
+    t.oncomplete = () => res(r.result); t.onerror = () => rej(t.error); t.onabort = () => rej(t.error);
+  });
+}
+async function storeAudio(id, file){
+  try { await idb('put', id, {blob:file, name:file.name}); }
+  catch(e) { AUD.mem[id] = {blob:file, name:file.name}; AUD.memOnly = true; }
+  AUD.has.add(id);
+}
+async function getAudio(id){ if (AUD.mem[id]) return AUD.mem[id]; try { return await idb('get', id); } catch(e) { return null; } }
+const hasAudio = s => AUD.has.has(s.id);
+const fmt = t => { if (!isFinite(t)) t = 0; const m = Math.floor(t / 60), x = Math.floor(t % 60); return m + ':' + String(x).padStart(2, '0'); };
+let segEnd = null, ab = {a:null, b:null}, lineLoop = false, syncing = null;
+const pb = id => document.getElementById(id);
+
+async function loadAudio(){
+  const s = byId(S.current);
+  const want = s && hasAudio(s) ? s.id : null;
+  if (AUD.id === want) { refreshBar(); return; }
+  P.pause(); segEnd = null; ab = {a:null, b:null}; lineLoop = false; endSync(false);
+  if (AUD.url) { URL.revokeObjectURL(AUD.url); AUD.url = null; }
+  AUD.id = want;
+  if (want) { const rec = await getAudio(want); if (rec && rec.blob && AUD.id === want) { AUD.url = URL.createObjectURL(rec.blob); P.src = AUD.url; P.playbackRate = S.prate || 1; } else if (AUD.id === want) { AUD.has.delete(want); AUD.id = null; } }
+  else { P.removeAttribute('src'); P.load(); }
+  refreshBar();
+  const cs = byId(S.current); if (cs && !editing) decorateSync(cs);
+}
+function refreshBar(){
+  const s = byId(S.current), on = !!(s && AUD.id === s.id && AUD.url);
+  pb('playerbar').hidden = !on; document.body.classList.toggle('has-player', on);
+  if (!on) return;
+  const synced = !!(S.sync[s.id] && S.sync[s.id].length);
+  pb('pb-title').textContent = (s.example ? '' : s.no + '강 ') + s.title;
+  pb('pb-play').textContent = P.paused ? '재생' : '일시정지';
+  pb('pb-line').hidden = !synced;
+  pb('pb-line').classList.toggle('on', lineLoop);
+  pb('pb-ab').classList.toggle('on', ab.a != null);
+  pb('pb-ab').textContent = ab.a == null ? '구간 반복' : ab.b == null ? `A ${fmt(ab.a)} → B 지점에서 누르기` : `반복 ${fmt(ab.a)}–${fmt(ab.b)} (끄기)`;
+  pb('pb-sync').textContent = synced ? '줄 시간 다시 맞추기' : '줄 시간 맞추기';
+  pb('pb-hint').textContent = synced ? '줄 번호를 누르면 그 줄로 이동' : (linesOf(s).length ? '' : '');
+  document.querySelectorAll('[data-prate]').forEach(b => b.setAttribute('aria-pressed', +b.dataset.prate === (S.prate || 1)));
+  pb('pb-tools').hidden = !!syncing; pb('pb-sync-row').hidden = !syncing;
+}
+function lineAt(id, t){ const a = S.sync[id]; if (!a) return -1; let k = -1; for (let i = 0; i < a.length; i++) if (a[i] != null && a[i] <= t + 0.05) k = i; return k; }
+function segOf(id, i){ const a = S.sync[id]; if (!a || a[i] == null) return null; let e = null; for (let j = i + 1; j < a.length; j++) if (a[j] != null) { e = a[j]; break; } return [a[i], e == null ? (P.duration || a[i] + 6) : e]; }
+function sayLine(s, i){
+  stopSpeak();
+  const seg = AUD.id === s.id && AUD.url ? segOf(s.id, i) : null;
+  if (seg) { P.currentTime = seg[0]; segEnd = seg[1]; P.play().catch(() => {}); }
+  else speak(linesOf(s)[i].en);
+}
+function decorateSync(s){
+  const synced = AUD.id === s.id && S.sync[s.id];
+  sheet.querySelectorAll('.ln[data-i] .n').forEach(n => {
+    const i = +n.parentElement.dataset.i;
+    if (synced && S.sync[s.id][i] != null) { n.classList.add('jump'); n.title = '이 줄부터 재생'; n.onclick = () => { stopSpeak(); segEnd = null; P.currentTime = S.sync[s.id][i]; P.play().catch(() => {}); }; }
+  });
+  highlight(true);
+}
+let lastHi = -2;
+function highlight(force){
+  const s = byId(S.current); if (!s || AUD.id !== s.id) return;
+  const i = syncing ? syncing.i - 1 : lineAt(s.id, P.currentTime);
+  if (i === lastHi && !force) return; lastHi = i;
+  if (playAll) return;
+  sheet.querySelectorAll('.ln.playing').forEach(e => e.classList.remove('playing'));
+  if (i < 0 || (P.paused && !syncing)) return;
+  const row = sheet.querySelector(`.ln[data-i="${i}"]`);
+  if (row) { row.classList.add('playing'); if (!P.paused) row.scrollIntoView({block:'nearest', behavior:'smooth'}); }
+}
+P.addEventListener('timeupdate', () => {
+  const t = P.currentTime, d = P.duration;
+  pb('pb-time').textContent = fmt(t) + ' / ' + fmt(d);
+  if (!seeking && isFinite(d) && d) pb('pb-seek').value = Math.round(t / d * 1000);
+  const s = byId(S.current);
+  if (segEnd != null && t >= segEnd) { P.pause(); segEnd = null; }
+  if (ab.a != null && ab.b != null && t >= ab.b) P.currentTime = ab.a;
+  if (lineLoop && s) { const k = lineAt(s.id, t - 0.25); const seg = k >= 0 ? segOf(s.id, k) : null; if (lineLoop.k == null && k >= 0) lineLoop = {k}; const L = lineLoop.k != null ? segOf(s.id, lineLoop.k) : seg; if (L && t >= L[1] - 0.05) P.currentTime = L[0]; }
+  highlight(false);
+});
+['play','pause','loadedmetadata','ended'].forEach(ev => P.addEventListener(ev, () => { pb('pb-time').textContent = fmt(P.currentTime) + ' / ' + fmt(P.duration); refreshBar(); highlight(true); if (ev === 'ended' && syncing) endSync(true); }));
+let seeking = false;
+pb('pb-seek').addEventListener('input', () => { seeking = true; if (isFinite(P.duration)) pb('pb-time').textContent = fmt(pb('pb-seek').value / 1000 * P.duration) + ' / ' + fmt(P.duration); });
+pb('pb-seek').addEventListener('change', () => { seeking = false; if (isFinite(P.duration)) { segEnd = null; P.currentTime = pb('pb-seek').value / 1000 * P.duration; } });
+pb('pb-play').onclick = () => { stopSpeak(); segEnd = null; P.paused ? P.play().catch(() => toast('이 음악 파일을 재생하지 못했습니다')) : P.pause(); };
+pb('pb-back').onclick = () => { P.currentTime = Math.max(0, P.currentTime - 5); };
+pb('pb-fwd').onclick = () => { P.currentTime = Math.min(P.duration || 0, P.currentTime + 5); };
+document.querySelectorAll('[data-prate]').forEach(b => b.onclick = () => { S.prate = +b.dataset.prate; P.playbackRate = S.prate; save(); refreshBar(); });
+pb('pb-ab').onclick = () => {
+  if (ab.a == null) { ab.a = P.currentTime; toast('A 지점을 찍었습니다. 반복을 끝낼 곳에서 한 번 더 누르세요'); }
+  else if (ab.b == null) { if (P.currentTime > ab.a + 0.5) { ab.b = P.currentTime; P.currentTime = ab.a; P.play().catch(() => {}); } else toast('B 지점은 A 지점보다 뒤여야 합니다'); }
+  else ab = {a:null, b:null};
+  lineLoop = false; refreshBar();
+};
+pb('pb-line').onclick = () => {
+  const s = byId(S.current);
+  if (lineLoop) lineLoop = false;
+  else { ab = {a:null, b:null}; const k = Math.max(0, lineAt(s.id, P.currentTime)); lineLoop = {k}; const seg = segOf(s.id, k); if (seg) { P.currentTime = seg[0]; P.play().catch(() => {}); } }
+  refreshBar();
+};
+pb('pb-remove').onclick = async () => {
+  const b = pb('pb-remove');
+  if (!b.dataset.armed) { b.dataset.armed = '1'; b.textContent = '한 번 더 누르면 뺍니다'; setTimeout(() => { delete b.dataset.armed; b.textContent = '음악 빼기'; }, 3000); return; }
+  delete b.dataset.armed; b.textContent = '음악 빼기';
+  const id = S.current; delete AUD.mem[id]; try { await idb('del', id); } catch(e) {}
+  AUD.has.delete(id); await loadAudio(); renderList(); renderSheet(); toast('음악을 뺐습니다');
+};
+/* line timing */
+function startSync(){
+  const s = byId(S.current); if (!linesOf(s).length) { toast('먼저 가사를 넣어 주세요'); return; }
+  syncing = {id:s.id, times:[], i:0}; ab = {a:null, b:null}; lineLoop = false; segEnd = null;
+  if (S.mode !== 'read') { S.mode = 'read'; renderSheet(); }
+  P.currentTime = 0; P.play().catch(() => {}); updSync(); refreshBar();
+}
+function updSync(){
+  const s = byId(syncing.id), n = linesOf(s).length;
+  pb('pb-stamp').textContent = syncing.i < n ? `${syncing.i + 1}번째 줄 시작` : '모든 줄을 찍었습니다';
+  pb('pb-stamp').disabled = syncing.i >= n;
+  const nx = linesOf(s)[syncing.i];
+  pb('pb-sync-info').textContent = nx ? `다음: ${nx.en.slice(0, 48)}${nx.en.length > 48 ? '…' : ''}` : '저장하고 끝내기를 누르세요';
+  highlight(true);
+}
+function stamp(){ if (!syncing) return; const n = linesOf(byId(syncing.id)).length; if (syncing.i >= n) return; syncing.times[syncing.i++] = Math.max(0, P.currentTime - 0.15); updSync(); }
+function endSync(keep){
+  if (!syncing) return;
+  if (keep && syncing.times.length >= 2) { S.sync[syncing.id] = syncing.times.slice(); save(); toast(`${syncing.times.length}줄의 시작 시간을 저장했습니다`); }
+  else if (keep) toast('두 줄 이상 찍어야 저장됩니다');
+  syncing = null; refreshBar(); renderSheet();
+}
+pb('pb-sync').onclick = startSync;
+pb('pb-stamp').onclick = stamp;
+pb('pb-sync-undo').onclick = () => { if (syncing && syncing.i > 0) { syncing.i--; syncing.times.length = syncing.i; P.currentTime = Math.max(0, (syncing.times[syncing.i - 1] ?? 0)); updSync(); } };
+pb('pb-sync-done').onclick = () => { P.pause(); endSync(true); };
+pb('pb-sync-cancel').onclick = () => { P.pause(); endSync(false); };
+document.addEventListener('keydown', e => {
+  if (!syncing) return;
+  if (e.target.closest && e.target.closest('input,textarea,select')) return;
+  if (e.code === 'Space' || e.key === ' ') { e.preventDefault(); stamp(); }
+});
+/* matching music files to songs */
+function songForAudio(name){
+  const base = name.split('/').pop().replace(/\.[^.]+$/, '');
+  const words = x => ' ' + x.toLowerCase().replace(/[’'`]/g, '').replace(/[^a-z0-9]+/g, ' ').trim() + ' ';
+  const wb = words(base);
+  const hit = SONGS.slice().sort((a,b) => b.title.length - a.title.length).find(s => wb.includes(words(s.title)));
+  if (hit) return hit;
+  const m = base.match(/(\d+)\s*강/); if (m && byId('L' + (+m[1]))) return byId('L' + (+m[1]));
+  return null;
+}
+pb && document.getElementById('audio-files').addEventListener('change', async e => {
+  const fs = [...e.target.files]; e.target.value = ''; if (!fs.length) return;
+  toast('음악을 저장하는 중입니다…');
+  let ok = 0; const miss = [];
+  for (const f of fs) { const s = songForAudio(f.name); if (!s) { miss.push(f.name); continue; } await storeAudio(s.id, f); ok++; }
+  await loadAudio(); renderList(); renderSheet();
+  toast(`${ok}곡에 음악을 넣었습니다` + (miss.length ? ` · ${miss.length}개는 곡을 찾지 못했습니다(곡을 고른 뒤 '음악 넣기'로 넣어 주세요)` : '') + (AUD.memOnly ? ' · 저장 공간이 부족해 이번 접속 동안만 유지됩니다' : ''));
+});
+document.getElementById('audio-one').addEventListener('change', async e => {
+  const f = e.target.files[0]; e.target.value = ''; if (!f) return;
+  const s = byId(S.current); if (!s) return;
+  await storeAudio(s.id, f); AUD.id = '__reload'; await loadAudio(); renderList(); renderSheet();
+  toast('음악을 넣었습니다' + (AUD.memOnly ? ' · 저장 공간이 부족해 이번 접속 동안만 유지됩니다' : ''));
+});
+
 /* ---------- backup ---------- */
 const bp = document.getElementById('backup-panel'), bt = document.getElementById('backup-text'), im = document.getElementById('import-msg');
 document.getElementById('btn-backup').onclick = () => { bp.hidden = !bp.hidden; };
 document.getElementById('btn-export').onclick = () => {
-  bt.value = JSON.stringify({app:'popsong-memorizer', v:1, saved:new Date().toISOString(), lyrics:S.lyrics, progress:S.progress});
+  bt.value = JSON.stringify({app:'popsong-memorizer', v:1, saved:new Date().toISOString(), lyrics:S.lyrics, progress:S.progress, sync:S.sync});
   document.getElementById('btn-copy-export').disabled = false;
   im.textContent = `${Object.keys(S.lyrics).length}곡 백업 코드를 만들었습니다`;
 };
@@ -729,6 +952,7 @@ function importText(txt){
     for (const [id, lines] of Object.entries(d.lyrics)) {
       if (!byId(id) || !Array.isArray(lines)) continue;
       S.lyrics[id] = lines.filter(l => l && typeof l.en === 'string').map(l => ({en:String(l.en), ko:String(l.ko || ''), shared:!!l.shared, note:String(l.note || '')}));
+      if (d.sync && Array.isArray(d.sync[id])) S.sync[id] = d.sync[id].map(Number);
       if (d.progress && Array.isArray(d.progress[id])) S.progress[id] = d.progress[id].map(v => (v === 1 || v === 2) ? v : 0);
       n++;
     }
@@ -741,6 +965,7 @@ document.getElementById('import-file').onchange = e => { const f = e.target.file
 if (!byId(S.current)) S.current = 'ex';
 if (!MODES.some(m => m[0] === S.mode)) S.mode = 'read';
 renderList(); renderSheet();
+idb('keys').then(keys => { (keys || []).forEach(k => AUD.has.add(k)); renderList(); renderSheet(); loadAudio(); }).catch(() => {});
 })();
 </script>
 
