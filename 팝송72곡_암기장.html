@@ -1,0 +1,748 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>팝송 72곡 암기장</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: songbook index on the left (72 tracks, grouped by theme), practice sheet on the right; stacks on phones. */
+:root{
+  --bg:#EDF0F4; --surface:#FFFFFF; --sunk:#E3E8EF; --ink:#16233A; --muted:#5B677A; --line:#D3DAE4;
+  --accent:#2448B4; --accent-ink:#FFFFFF; --mark:#FFE36E; --mark-ink:#16233A;
+  --ok:#17804F; --ok-bg:#DDF3E7; --bad:#B9312F; --bad-bg:#FBE3E1;
+  --f-display:"DM Serif Display", Georgia, "Times New Roman", serif;
+  --f-body:"IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E141F; --surface:#162031; --sunk:#111A28; --ink:#E5EBF4; --muted:#93A0B4; --line:#2A3649;
+  --accent:#8EA7FF; --accent-ink:#0E141F; --mark:#5E5214; --mark-ink:#FFF4C2;
+  --ok:#57C891; --ok-bg:#163527; --bad:#F27B76; --bad-bg:#3A1C1C; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E141F; --surface:#162031; --sunk:#111A28; --ink:#E5EBF4; --muted:#93A0B4; --line:#2A3649;
+  --accent:#8EA7FF; --accent-ink:#0E141F; --mark:#5E5214; --mark-ink:#FFF4C2;
+  --ok:#57C891; --ok-bg:#163527; --bad:#F27B76; --bad-bg:#3A1C1C; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1240px;margin:0 auto;padding-block:18px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+header.top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.brand h1{font-family:var(--f-display);font-weight:400;font-size:clamp(26px,4vw,34px);line-height:1.1;margin:0;letter-spacing:.2px}
+.brand p{margin:4px 0 0;color:var(--muted);font-size:13px}
+.top-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 12px;cursor:pointer;font-size:14px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
+.btn.ghost{background:transparent}
+.btn.small{padding:4px 9px;font-size:13px}
+.btn.danger{color:var(--bad)}
+.btn[disabled]{opacity:.45;cursor:default}
+
+.layout{display:grid;grid-template-columns:300px minmax(0,1fr);gap:18px;align-items:start}
+aside.index{background:var(--surface);border:1px solid var(--line);border-radius:12px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);max-height:calc(100vh - 24px);display:flex;flex-direction:column;overflow:hidden}
+.index-head{padding:14px 14px 10px;border-bottom:1px solid var(--line);display:grid;gap:10px}
+.stat-row{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.stat-row b{color:var(--ink)}
+.meter{height:6px;background:var(--sunk);border-radius:3px;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--accent);width:0}
+#search{width:100%;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+.list{overflow-y:auto;padding:6px 6px 12px}
+.group-label{font-size:11.5px;letter-spacing:.06em;color:var(--muted);padding:12px 8px 4px;font-weight:600}
+.song{display:grid;grid-template-columns:38px minmax(0,1fr) auto;gap:6px;align-items:center;width:100%;text-align:left;border:0;background:transparent;border-radius:8px;padding:6px 8px;cursor:pointer}
+.song:hover{background:var(--sunk)}
+.song.active{background:var(--accent);color:var(--accent-ink)}
+.song .no{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.song.active .no{color:inherit;opacity:.8}
+.song .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px}
+.chip{font-size:11px;font-family:var(--f-mono);padding:1px 6px;border-radius:10px;border:1px solid var(--line);color:var(--muted);font-variant-numeric:tabular-nums}
+.chip.has{border-color:transparent;background:var(--sunk);color:var(--ink)}
+.chip.done{background:var(--ok-bg);color:var(--ok);border-color:transparent}
+.song.active .chip{background:transparent;border-color:currentColor;color:inherit}
+.mobile-toggle{display:none}
+
+main.sheet{background:var(--surface);border:1px solid var(--line);border-radius:12px;min-width:0}
+.sheet-head{padding:20px 22px 0;display:grid;gap:6px}
+.eyebrow{font-size:12px;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.song-title{font-family:var(--f-display);font-weight:400;font-size:clamp(28px,4.4vw,42px);line-height:1.1;margin:0;text-wrap:balance}
+.head-meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;color:var(--muted);font-size:13px}
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);padding:0 18px;margin-top:14px;overflow-x:auto}
+.tab{border:0;background:transparent;padding:10px 12px;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap;font-weight:500}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:14px 22px;border-bottom:1px dashed var(--line);font-size:14px}
+.toolbar .sep{flex:1}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:transparent;padding:5px 10px;cursor:pointer;font-size:13px;font-variant-numeric:tabular-nums}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+label.check{display:inline-flex;gap:6px;align-items:center;cursor:pointer;font-size:13.5px}
+.body{padding:16px 22px 26px}
+
+/* lyric lines */
+.lines{display:grid;gap:2px;counter-reset:ln}
+.ln{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:10px;align-items:start;padding:7px 6px;border-radius:8px}
+.ln:hover{background:var(--sunk)}
+.ln .n{font-family:var(--f-mono);font-size:12px;color:var(--muted);padding-top:3px;text-align:right;font-variant-numeric:tabular-nums}
+.ln .en{font-size:17px;line-height:1.5;overflow-wrap:anywhere}
+.ln .ko{font-size:13.5px;color:var(--muted);margin-top:2px}
+.ln.playing{background:var(--mark);color:var(--mark-ink)}
+.ln.playing .ko,.ln.playing .n{color:var(--mark-ink)}
+.hidden-en{color:transparent;background:var(--sunk);border-radius:4px;cursor:pointer;user-select:none}
+.speak{border:0;background:transparent;cursor:pointer;color:var(--muted);padding:3px 5px;border-radius:6px}
+.speak:hover{color:var(--accent);background:var(--sunk)}
+.speak svg{width:17px;height:17px;display:block}
+
+.initials .en{font-family:var(--f-mono);font-size:15.5px;letter-spacing:.02em;cursor:pointer}
+.initials .en .gap{color:var(--muted)}
+.initials .ln.open .en{font-family:var(--f-body);font-size:17px;letter-spacing:0}
+
+.cloze .en{line-height:2.1}
+.blank{font-family:var(--f-mono);font-size:15px;border:0;border-bottom:2px solid var(--muted);background:var(--mark);color:var(--mark-ink);border-radius:4px 4px 0 0;padding:1px 4px;margin:0 1px;text-align:center;min-width:2.2ch}
+.blank.ok{background:var(--ok-bg);color:var(--ok);border-bottom-color:var(--ok)}
+.blank.bad{background:var(--bad-bg);color:var(--bad);border-bottom-color:var(--bad)}
+.score{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:13.5px}
+
+/* test card */
+.card{max-width:720px;margin:6px auto 0;display:grid;gap:14px}
+.progress-line{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.cue{padding:12px 14px;border-left:3px solid var(--line);color:var(--muted);font-size:15px}
+.cue small{display:block;font-size:11.5px;letter-spacing:.06em;font-weight:600;margin-bottom:2px}
+.prompt-ko{font-size:19px;font-weight:600;line-height:1.45}
+.prompt-ko.none{font-weight:400;color:var(--muted);font-size:15px}
+#t-answer{width:100%;min-height:76px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font-size:17px;resize:vertical}
+.reveal{padding:14px;border-radius:10px;background:var(--sunk);font-size:17px;line-height:1.7}
+.reveal .w-ok{color:var(--ok);font-weight:600}
+.reveal .w-miss{color:var(--bad);text-decoration:underline wavy;text-underline-offset:4px}
+.reveal .acc{display:block;margin-top:6px;font-size:13px;color:var(--muted);font-family:var(--f-mono)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.grade{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grade .btn{justify-content:center;padding:11px;font-size:15px}
+.btn.know{background:var(--ok-bg);color:var(--ok);border-color:transparent;font-weight:600}
+.btn.again{background:var(--bad-bg);color:var(--bad);border-color:transparent;font-weight:600}
+.done-box{text-align:center;padding:26px 10px;display:grid;gap:10px;justify-items:center}
+.done-box .big{font-family:var(--f-display);font-size:44px;line-height:1}
+
+/* editor + empty */
+.editor{display:grid;gap:12px}
+.editor textarea{width:100%;min-height:300px;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font-size:15px;line-height:1.6;resize:vertical}
+.hint{background:var(--sunk);border-radius:10px;padding:12px 14px;font-size:13.5px;color:var(--muted)}
+.hint b{color:var(--ink)}
+.hint ol{margin:6px 0 0;padding-left:20px}
+.parse-info{font-size:13px;color:var(--muted);font-family:var(--f-mono)}
+.note{font-size:12.5px;color:var(--muted);margin-top:4px;padding:4px 10px;border-left:2px solid var(--mark);white-space:pre-line}
+.import-box{border:1.5px dashed var(--accent);border-radius:12px;padding:18px;display:grid;gap:8px;justify-items:start;background:var(--sunk)}
+.import-box strong{font-size:16px}
+.example-tag{display:inline-block;font-size:11.5px;background:var(--mark);color:var(--mark-ink);padding:1px 8px;border-radius:10px;font-weight:600}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:16px;display:grid;gap:10px}
+.panel h2{margin:0;font-size:16px}
+.panel textarea{width:100%;min-height:110px;font-family:var(--f-mono);font-size:12px;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:20px;font-size:14px;z-index:20}
+
+@media (max-width:860px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  aside.index{position:static;max-height:none}
+  aside.index .list{display:none;max-height:55vh}
+  aside.index.open .list{display:block}
+  .mobile-toggle{display:inline-flex}
+  .sheet-head,.toolbar,.body{padding-left:14px;padding-right:14px}
+  .tabs{padding:0 8px}
+  .ln{grid-template-columns:24px minmax(0,1fr) auto;gap:6px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>팝송 72곡 암기장</h1>
+      <p>강의 자료(zip·hwp)를 불러와 가사 보기 · 첫 글자 · 빈칸 · 한 줄씩 테스트로 외웁니다. 자료는 이 브라우저 안에서만 읽고 저장합니다.</p>
+    </div>
+    <div class="top-actions">
+      <label class="btn primary" for="hwp-files">강의 자료 불러오기 (zip · hwp)</label>
+      <input type="file" id="hwp-files" accept=".zip,.hwp" multiple hidden>
+      <button class="btn" id="btn-backup" type="button">백업 · 복원</button>
+    </div>
+  </header>
+
+  <section class="panel" id="backup-panel" hidden>
+    <h2>백업 · 복원</h2>
+    <p class="hint" style="margin:0">브라우저 데이터를 지우거나 다른 기기에서 쓰려면 아래 백업 코드를 복사해 메모장 등에 보관하세요. 복원할 때는 코드를 붙여넣거나 저장해 둔 .json 파일을 고르면 됩니다.</p>
+    <div class="row">
+      <button class="btn" id="btn-export" type="button">백업 코드 만들기</button>
+      <button class="btn" id="btn-copy-export" type="button" disabled>복사</button>
+    </div>
+    <textarea id="backup-text" placeholder="여기에 백업 코드가 나옵니다. 복원하려면 보관해 둔 코드를 여기에 붙여넣으세요." spellcheck="false"></textarea>
+    <div class="row">
+      <button class="btn primary" id="btn-import" type="button">붙여넣은 코드로 복원</button>
+      <label class="btn" for="import-file">.json 파일에서 복원</label>
+      <input type="file" id="import-file" accept=".json,.txt,application/json" hidden>
+      <span class="parse-info" id="import-msg"></span>
+    </div>
+  </section>
+
+  <div class="layout">
+    <aside class="index" id="index">
+      <div class="index-head">
+        <div class="row" style="justify-content:space-between">
+          <strong style="font-size:14px">곡 목록</strong>
+          <button class="btn small mobile-toggle" id="btn-list-toggle" type="button" aria-expanded="false">펼치기</button>
+        </div>
+        <div class="stat-row"><span>가사 입력 <b id="st-filled">0</b> / 72곡</span><span>평균 암기 <b id="st-avg">0%</b></span></div>
+        <div class="meter" aria-hidden="true"><i id="st-bar"></i></div>
+        <input id="search" type="search" placeholder="곡명·강·테마 검색" autocomplete="off">
+      </div>
+      <nav class="list" id="list" aria-label="곡 목록"></nav>
+    </aside>
+
+    <main class="sheet" id="sheet"></main>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/cfb@1.2.2/dist/cfb.min.js"></script>
+<script>
+(() => {
+'use strict';
+/* ---------- catalogue (titles only) ---------- */
+const RAW = [
+[1,"그림이 그려지는 팝송","Over the Rainbow"],[2,"그림이 그려지는 팝송","Beauty and the Beast"],[3,"그림이 그려지는 팝송","If"],[4,"그림이 그려지는 팝송","Somewhere Out There"],
+[5,"발음이 좋아지는 팝송","How Deep Is Your Love"],[6,"발음이 좋아지는 팝송","Dream a Little Dream of Me"],[7,"발음이 좋아지는 팝송","Raindrops Keep Falling on My Head"],[8,"발음이 좋아지는 팝송","Tie a Yellow Ribbon Round the Old Oak Tree"],
+[9,"친구가 많아지는 팝송","Ben"],[10,"친구가 많아지는 팝송","That's What Friends Are For"],[11,"친구가 많아지는 팝송","Bridge Over Troubled Water"],[12,"친구가 많아지는 팝송","You've Got a Friend"],
+[13,"희망이 생기는 팝스","I Believe I Can Fly"],[14,"희망이 생기는 팝스","Don't Worry, Be Happy"],[15,"희망이 생기는 팝스","Tomorrow"],[16,"희망이 생기는 팝스","Thank You for the Music"],
+[17,"리듬감이 생기는 팝스","Memory"],[18,"리듬감이 생기는 팝스","Top of the World"],[19,"리듬감이 생기는 팝스","New York, New York"],[20,"리듬감이 생기는 팝스","Don't Be Cruel"],
+[21,"사랑을 부르는 팝스","Nothing's Gonna Change My Love for You"],[22,"사랑을 부르는 팝스","I.O.U."],[23,"사랑을 부르는 팝스","Take Me Home, Country Roads"],[24,"사랑을 부르는 팝스","Let Me Be There"],
+[25,"마음이 착해지는 팝스","Rhythm of the Rain"],[26,"마음이 착해지는 팝스","Congratulations"],[27,"마음이 착해지는 팝스","My Way"],[28,"마음이 착해지는 팝스","There's a Kind of Hush"],
+[29,"이별을 추억하는 팝스","Sorry Seems to Be the Hardest Word"],[30,"이별을 추억하는 팝스","Sad Movies"],[31,"이별을 추억하는 팝스","Something Stupid"],[32,"이별을 추억하는 팝스","Dancing Queen"],
+[33,"머리가 맑아지는 팝스","The Young Ones"],[34,"머리가 맑아지는 팝스","Morning Train"],[35,"머리가 맑아지는 팝스","Surfin' U.S.A."],[36,"머리가 맑아지는 팝스","Summer Nights"],
+[37,"나를 강하게 만드는 팝스","You Raise Me Up"],[38,"나를 강하게 만드는 팝스","You Light Up My Life"],[39,"나를 강하게 만드는 팝스","Honesty"],[40,"나를 강하게 만드는 팝스","Fame"],
+[41,"사랑이 느껴지는 팝스","I Swear"],[42,"사랑이 느껴지는 팝스","My Heart Will Go On"],[43,"사랑이 느껴지는 팝스","Can You Feel the Love Tonight"],[44,"사랑이 느껴지는 팝스","Perhaps Love"],
+[46,"희망과 사랑으로 재회하다","Happy New Year"],[47,"희망과 사랑으로 재회하다","Our Last Summer"],[48,"희망과 사랑으로 재회하다","Lay All Your Love on Me"],[49,"희망과 사랑으로 재회하다","I Have a Dream"],
+[50,"티파니에서 아침을","My Love"],[51,"티파니에서 아침을","Close to You"],[52,"티파니에서 아침을","I Believe in Music"],[53,"티파니에서 아침을","All I Have to Do Is Dream"],
+[54,"Shall We Dance","Just the Two of Us"],[55,"Shall We Dance","And I Love You So"],[56,"Shall We Dance","Wonderful Tonight"],[57,"Shall We Dance","Shall We Dance"],
+[58,"그 여자 작사 그 남자 작곡","We Are the World"],[59,"그 여자 작사 그 남자 작곡","Endless Love"],[60,"그 여자 작사 그 남자 작곡","Up Where We Belong"],[61,"그 여자 작사 그 남자 작곡","Quando, Quando, Quando"],
+[62,"시애틀의 잠 못 이루는 밤","When I Dream"],[63,"시애틀의 잠 못 이루는 밤","Now and Forever"],[64,"시애틀의 잠 못 이루는 밤","Midnight Blue"],[65,"시애틀의 잠 못 이루는 밤","The Way We Were"],
+[66,"내 남자친구의 결혼식","Goodbye"],[67,"내 남자친구의 결혼식","I'd Love You to Want Me"],[68,"내 남자친구의 결혼식","Hard to Say I'm Sorry"],[69,"내 남자친구의 결혼식","Have I Told You Lately"],
+[70,"내일을 향해 쏴라!","Any Dream Will Do"],[71,"내일을 향해 쏴라!","No Matter What"],[72,"내일을 향해 쏴라!","Summer Holiday"],[73,"내일을 향해 쏴라!","What a Wonderful World"]
+];
+const SONGS = RAW.map(([no,theme,title]) => ({id:'L'+no, no, theme, title}));
+/* Public-domain sample (John Newton, 1779) so every mode can be tried before pasting anything. */
+const EXAMPLE = {id:'ex', no:0, theme:'연습용 예시', title:'Amazing Grace', example:true, lines:[
+ {en:"Amazing grace, how sweet the sound",ko:"놀라운 은혜, 그 소리 얼마나 달콤한지"},
+ {en:"That saved a wretch like me",ko:"나 같은 비참한 자를 구원했네"},
+ {en:"I once was lost, but now am found",ko:"한때 길을 잃었으나 이제는 찾았고"},
+ {en:"Was blind, but now I see",ko:"눈멀었으나 이제는 보네"},
+ {en:"'Twas grace that taught my heart to fear",ko:"내 마음에 두려움을 가르친 것도 은혜였고"},
+ {en:"And grace my fears relieved",ko:"그 두려움을 덜어준 것도 은혜였네"},
+ {en:"How precious did that grace appear",ko:"그 은혜가 얼마나 귀하게 보였던가"},
+ {en:"The hour I first believed",ko:"내가 처음 믿던 그 시간에"}
+]};
+const ALL = [EXAMPLE, ...SONGS];
+const byId = id => ALL.find(s => s.id === id);
+
+/* ---------- storage (this browser only) ---------- */
+const KEY = 'popsong-memorizer.v1';
+let S = {lyrics:{}, progress:{}, current:'ex', mode:'read', showKo:true, showNote:true, rate:0.9, level:2};
+try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(S, JSON.parse(raw)); } catch(e) {}
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e) {} }
+
+const linesOf = s => s.example ? s.lines : (S.lyrics[s.id] || []);
+function prog(s){
+  const n = linesOf(s).length;
+  let p = S.progress[s.id];
+  if (!Array.isArray(p) || p.length !== n) { p = new Array(n).fill(0); S.progress[s.id] = p; }
+  return p;
+}
+const pct = s => { const n = linesOf(s).length; if (!n) return 0; return Math.round(prog(s).filter(v => v === 2).length / n * 100); };
+
+/* ---------- HWP reader (runs locally in this browser) ---------- */
+/* HWP (v5, OLE) -> text -> {lines:[{en,ko,shared,note}]}  — shared between page and node test */
+function hwpText(u8, CFB, pako){
+  const cfb = CFB.read(u8, {type:'array'});
+  const find = p => CFB.find(cfb, p);
+  const hdr = find('/FileHeader') || find('FileHeader');
+  if (!hdr) throw new Error('HWP 파일이 아닙니다');
+  const compressed = (hdr.content[36] & 1) === 1;
+  const secs = [];
+  for (let i = 0; i < 400; i++) { const e = find('/BodyText/Section' + i) || find('BodyText/Section' + i); if (!e) break; secs.push(e); }
+  let out = '';
+  for (const sec of secs) {
+    let d = Uint8Array.from(sec.content);
+    if (compressed) d = pako.inflateRaw(d);
+    const dv = new DataView(d.buffer, d.byteOffset, d.byteLength);
+    let i = 0;
+    while (i + 4 <= d.length) {
+      const h = dv.getUint32(i, true); i += 4;
+      const tag = h & 0x3ff; let size = (h >>> 20) & 0xfff;
+      if (size === 0xfff) { size = dv.getUint32(i, true); i += 4; }
+      if (tag === 67) {
+        let j = i, t = '';
+        while (j + 2 <= i + size) {
+          const c = dv.getUint16(j, true);
+          if ((c >= 1 && c <= 12) || (c >= 14 && c <= 23)) { j += 16; continue; }
+          if (c === 13) t += '\n'; else if (c >= 32) t += String.fromCharCode(c);
+          j += 2;
+        }
+        out += t;
+      }
+      i += size;
+    }
+  }
+  return out;
+}
+
+function parseLesson(text, title){
+  const HG = /[ㄱ-ㆎ가-힣]/g, LT = /[A-Za-z]/g;
+  const cnt = (s, re) => (s.match(re) || []).length;
+  const isKo = s => cnt(s, HG) >= 1;
+  const isEn = s => cnt(s, LT) >= 2 && cnt(s, HG) < 2;
+  const key = s => s.toLowerCase().replace(/[^a-z]/g, '');
+  const tkey = key(title || '');
+  let raw = text.split(/\r?\n/).map(l => l.replace(/[ 　]/g, ' ').trim());
+  // table-style header: drop everything through the 방영일 date cell
+  const dateIdx = raw.slice(0, 20).findIndex(l => /^\d{1,2}\s*월\s*\d{1,2}\s*일$/.test(l));
+  if (dateIdx >= 0 && raw.slice(0, dateIdx).some(l => /회\s*차/.test(l))) raw = raw.slice(dateIdx + 1);
+  const markEn = m => raw.filter(l => l.startsWith(m) && isEn(l.slice(1))).length;
+  const starAll = raw.filter(l => l.startsWith('*')).length;
+  const marker = markEn('▶') >= 3 ? '▶' : (markEn('*') >= 5 && markEn('*') >= starAll * 0.6 ? '*' : null);
+  const arrowMode = !!marker;
+
+  const blocks = []; let cur = null, mode = 'none', started = false, hdrSeen = 0;
+  const newBlock = () => { cur = {en:[], ko:[], notes:[]}; blocks.push(cur); };
+  for (let l of raw) {
+    if (!l) continue;
+    if (!started) {
+      hdrSeen++;
+      if (/^brain\s*pops/i.test(l) || /\d+\s*주\s*-/.test(l) || /^#\s*\d+/.test(l)) continue;
+      if (hdrSeen <= 6 && tkey && /\s[-–—]\s|^\S+\s*$/.test(l) && key(l).startsWith(tkey.slice(0, Math.min(tkey.length, 12))) && !l.startsWith('▶')) continue;
+    }
+    if (/^[<\[(（【〈《].{0,20}[>\])）】〉》]$/.test(l)) { mode = 'none'; continue; }   // <A파트>, <후렴>, [Chorus]
+    l = l.replace(/^[<\[〈《][^>\]〉》]{0,12}[>\]〉》]\s*/, '');
+    if (!l) continue;
+    const arrow = !!marker && l.startsWith(marker);
+    if (arrow) l = l.slice(1).trim();
+    if (!arrow && cur && cur.en.length && /^\*/.test(l)) {   // '*번역' 형식 (예: 3·4강)
+      const b = l.slice(1).trim();
+      if (cnt(b, HG) >= 4 && cnt(b, LT) === 0 && !/:/.test(b) && (!cur.ko.length || mode === 'ko')) { cur.ko.push(b); mode = 'ko'; continue; }
+    }
+    if (!arrow && (/^[*※☞\-–]/.test(l) || /^ex\)/i.test(l) || /:\s*\S*[\u3131-\uD7A3]/.test(l))) { if (!cur) newBlock(); cur.notes.push(l.replace(/^[*※]\s*/, '')); mode = 'note'; continue; }
+    if (arrowMode) {
+      if (arrow) { started = true; if (!cur || cur.ko.length || cur.notes.length) newBlock(); cur.en.push(l); mode = 'en'; continue; }
+      if (!started) continue;
+      if (isEn(l) && mode !== 'note') { started = true; if (mode !== 'en') newBlock(); cur.en.push(l); mode = 'en'; continue; }
+      if (mode === 'note') { cur.notes.push(l); continue; }
+      if (isKo(l) || mode === 'ko') { cur.ko.push(l); mode = 'ko'; continue; }
+      cur.notes.push(l); continue;
+    }
+    if (isEn(l)) {
+      started = true;
+      if (!cur || cur.ko.length || cur.notes.length) newBlock();
+      cur.en.push(l); mode = 'en'; continue;
+    }
+    if (!started) continue;
+    if (mode === 'note') { cur.notes.push(l); continue; }
+    if (isKo(l)) { cur.ko.push(l); mode = 'ko'; continue; }
+  }
+  const lines = [];
+  for (const b of blocks) {
+    if (!b.en.length) { if (lines.length && b.notes.length) lines[lines.length-1].note = [lines[lines.length-1].note, ...b.notes].filter(Boolean).join('\n'); continue; }
+    const note = b.notes.join('\n');
+    if (b.ko.length === b.en.length) b.en.forEach((en, i) => lines.push({en, ko:b.ko[i], shared:false, note: i === b.en.length-1 ? note : ''}));
+    else { const ko = b.ko.join(' '); b.en.forEach((en, i) => lines.push({en, ko, shared: b.en.length > 1, note: i === b.en.length-1 ? note : ''})); }
+  }
+  return lines;
+}
+
+/* ---------- text helpers ---------- */
+const HANGUL = /[ㄱ-ㆎ가-힣]/g, LATIN = /[A-Za-z]/g;
+const count = (s, re) => (s.match(re) || []).length;
+const isKo = s => count(s, HANGUL) > 0 && count(s, HANGUL) >= count(s, LATIN);
+function parse(text){
+  const out = [];
+  for (const raw of text.split(/\r?\n/)) {
+    const l = raw.replace(/ /g,' ').trim();
+    if (!l) continue;
+    if (/^[\[(（【].*[\])）】]$/.test(l) && count(l, HANGUL) === 0 && l.split(/\s+/).length <= 4) continue; // [Chorus] 같은 구간 표시
+    const parts = l.split(/\s*(?:\t|\s\|\s|\s\/\/\s)\s*/);
+    if (parts.length >= 2 && !isKo(parts[0]) && isKo(parts.slice(1).join(' '))) { out.push({en:parts[0], ko:parts.slice(1).join(' ')}); continue; }
+    if (isKo(l)) { if (out.length) { const last = out[out.length-1]; last.ko = last.ko ? last.ko + ' ' + l : l; } continue; }
+    out.push({en:l, ko:''});
+  }
+  return out;
+}
+const koShown = (lines, i) => lines[i].ko && (!lines[i].shared || !lines[i+1] || lines[i+1].ko !== lines[i].ko);
+const unparse = lines => lines.map(l => l.ko ? l.en + '\n' + l.ko : l.en).join('\n');
+const norm = w => w.toLowerCase().replace(/[’‘`´]/g,"'").replace(/[^a-z0-9']/g,'').replace(/^'+|'+$/g,'');
+function tokens(line){
+  return line.split(/\s+/).filter(Boolean).map(w => {
+    const m = w.match(/^([^A-Za-z0-9]*)([A-Za-z0-9](?:.*[A-Za-z0-9])?)?([^A-Za-z0-9]*)$/);
+    return m && m[2] ? {pre:m[1], core:m[2], post:m[3]} : {pre:w, core:'', post:''};
+  });
+}
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function rng(seed){ return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+/* ---------- speech ---------- */
+const canSpeak = 'speechSynthesis' in window;
+let voice = null;
+function pickVoice(){ if (!canSpeak) return; const v = speechSynthesis.getVoices(); voice = v.find(x => /en-US/i.test(x.lang) && /Google|Samantha|Aria|Jenny/i.test(x.name)) || v.find(x => /^en(-|_)US/i.test(x.lang)) || v.find(x => /^en/i.test(x.lang)) || null; }
+if (canSpeak) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+function speak(text, onend){
+  if (!canSpeak) { toast('이 브라우저는 음성 읽기를 지원하지 않습니다'); return; }
+  const u = new SpeechSynthesisUtterance(text); u.lang = 'en-US'; u.rate = S.rate; if (voice) u.voice = voice;
+  if (onend) u.onend = onend;
+  speechSynthesis.speak(u);
+}
+function stopSpeak(){ if (canSpeak) speechSynthesis.cancel(); playAll = false; document.querySelectorAll('.ln.playing').forEach(e => e.classList.remove('playing')); }
+const SPK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>';
+
+/* ---------- ui state ---------- */
+let editing = false, playAll = false, clozeSeed = 1, initialsOpen = new Set(), hideEn = false, revealedEn = new Set();
+let T = null; // test session
+
+function toast(msg){ const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 2200); }
+
+/* ---------- sidebar ---------- */
+const listEl = document.getElementById('list');
+function renderList(){
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  let html = '', lastTheme = null;
+  for (const s of ALL) {
+    const hay = (s.no + '강 ' + s.title + ' ' + s.theme).toLowerCase();
+    if (q && !hay.includes(q)) continue;
+    if (s.theme !== lastTheme) { html += `<div class="group-label">${esc(s.theme)}</div>`; lastTheme = s.theme; }
+    const n = linesOf(s).length, p = pct(s);
+    const chip = !n ? '<span class="chip">미입력</span>' : `<span class="chip ${p===100?'done':'has'}">${p}%</span>`;
+    html += `<button type="button" class="song${s.id===S.current?' active':''}" data-id="${s.id}"><span class="no">${s.example?'예시':s.no+'강'}</span><span class="t">${esc(s.title)}</span>${chip}</button>`;
+  }
+  listEl.innerHTML = html || '<p class="parse-info" style="padding:10px">검색 결과가 없습니다.</p>';
+  const filled = SONGS.filter(s => linesOf(s).length).length;
+  const avg = filled ? Math.round(SONGS.filter(s => linesOf(s).length).reduce((a,s) => a + pct(s), 0) / filled) : 0;
+  document.getElementById('st-filled').textContent = filled;
+  document.getElementById('st-avg').textContent = avg + '%';
+  document.getElementById('st-bar').style.width = (filled / 72 * 100) + '%';
+}
+listEl.addEventListener('click', e => {
+  const b = e.target.closest('.song'); if (!b) return;
+  stopSpeak(); S.current = b.dataset.id; editing = false; T = null; initialsOpen.clear(); revealedEn.clear(); save();
+  document.getElementById('index').classList.remove('open'); document.getElementById('btn-list-toggle').textContent = '펼치기';
+  renderList(); renderSheet(); document.getElementById('sheet').scrollIntoView({block:'start', behavior:'smooth'});
+});
+document.getElementById('search').addEventListener('input', renderList);
+document.getElementById('btn-list-toggle').addEventListener('click', e => {
+  const ix = document.getElementById('index'); ix.classList.toggle('open');
+  const open = ix.classList.contains('open'); e.currentTarget.textContent = open ? '접기' : '펼치기'; e.currentTarget.setAttribute('aria-expanded', open);
+});
+
+/* ---------- main sheet ---------- */
+const sheet = document.getElementById('sheet');
+const MODES = [['read','가사 보기'],['initials','첫 글자'],['cloze','빈칸 채우기'],['test','한 줄씩 테스트']];
+
+function renderSheet(){
+  const s = byId(S.current) || EXAMPLE;
+  const lines = linesOf(s);
+  const n = lines.length;
+  let head = `<div class="sheet-head">
+    <div class="eyebrow">${s.example ? '<span class="example-tag">연습용 예시 · 퍼블릭 도메인</span>' : esc(s.no + '강 · ' + s.theme)}</div>
+    <h2 class="song-title">${esc(s.title)}</h2>
+    <div class="head-meta">${n ? `<span>${n}줄</span><span>·</span><span>암기 ${pct(s)}%</span>` : '<span>아직 가사를 넣지 않았습니다</span>'}
+      ${s.example ? '' : `<span class="sep"></span><button class="btn small" type="button" id="btn-edit">${n ? '가사 수정' : '가사 넣기'}</button>`}
+      ${n && !s.example ? `<button class="btn small ghost" type="button" id="btn-reset">암기 기록 초기화</button>` : ''}
+    </div></div>`;
+
+  if (editing || (!n && !s.example)) { sheet.innerHTML = head + `<div class="body">${editorHTML(s)}</div>`; bindEditor(s); return; }
+
+  head += `<div class="tabs" role="tablist">${MODES.map(([k,l]) => `<button class="tab" role="tab" type="button" data-mode="${k}" aria-selected="${S.mode===k}">${l}</button>`).join('')}</div>`;
+  let tool = '', body = '';
+  const koToggle = `<label class="check"><input type="checkbox" id="opt-ko" ${S.showKo?'checked':''}> 해석 보기</label>`;
+  const rateSeg = `<span class="seg" aria-label="읽기 속도">${[0.7,0.9,1].map(r => `<button type="button" data-rate="${r}" aria-pressed="${S.rate===r}">${r===1?'1.0':r}×</button>`).join('')}</span>`;
+
+  if (S.mode === 'read') {
+    tool = `${koToggle}<label class="check"><input type="checkbox" id="opt-hide-en" ${hideEn?'checked':''}> 영어 가리기</label>${lines.some(l => l.note) ? `<label class="check"><input type="checkbox" id="opt-note" ${S.showNote?'checked':''}> 강의 메모</label>` : ''}<span class="sep"></span>${rateSeg}<button class="btn small primary" type="button" id="btn-playall">${playAll?'멈춤':'전곡 듣기'}</button>`;
+    body = `<div class="lines">${lines.map((l,i) => {
+      const hid = hideEn && !revealedEn.has(i);
+      return `<div class="ln" data-i="${i}"><span class="n">${i+1}</span><div><div class="en${hid?' hidden-en':''}" data-reveal="${i}" ${hid?'title="눌러서 보기" tabindex="0"':''}>${esc(l.en)}</div>${S.showKo && koShown(lines,i) ? `<div class="ko">${esc(l.ko)}</div>` : ''}${S.showNote && l.note ? `<div class="note">${esc(l.note)}</div>` : ''}</div><button class="speak" type="button" data-say="${i}" aria-label="${i+1}번째 줄 듣기">${SPK}</button></div>`;
+    }).join('')}</div>`;
+    if (hideEn) tool += '';
+  }
+  else if (S.mode === 'initials') {
+    tool = `${koToggle}<span class="sep"></span><button class="btn small" type="button" id="btn-open-all">${initialsOpen.size===n?'모두 접기':'모두 펼치기'}</button>`;
+    body = `<p class="parse-info" style="margin:0 0 10px">첫 글자만 보고 소리 내어 불러 보세요. 줄을 누르면 원문이 열립니다.</p><div class="lines initials">${lines.map((l,i) => {
+      const open = initialsOpen.has(i);
+      const shown = open ? esc(l.en) : tokens(l.en).map(t => t.core ? esc(t.pre) + esc(t.core[0]) + `<span class="gap">${'_'.repeat(Math.max(0,t.core.length-1))}</span>` + esc(t.post) : esc(t.pre)).join(' ');
+      return `<div class="ln${open?' open':''}"><span class="n">${i+1}</span><div><div class="en" data-toggle="${i}" tabindex="0" role="button" aria-expanded="${open}">${shown}</div>${S.showKo && koShown(lines,i) ? `<div class="ko">${esc(l.ko)}</div>` : ''}</div><button class="speak" type="button" data-say="${i}" aria-label="${i+1}번째 줄 듣기">${SPK}</button></div>`;
+    }).join('')}</div>`;
+  }
+  else if (S.mode === 'cloze') {
+    const levels = [[1,'25%'],[2,'50%'],[3,'75%'],[4,'전부']];
+    tool = `<span>가리는 양</span><span class="seg">${levels.map(([v,l]) => `<button type="button" data-level="${v}" aria-pressed="${S.level===v}">${l}</button>`).join('')}</span>${koToggle}<span class="sep"></span><button class="btn small" type="button" id="btn-shuffle">새로 섞기</button><button class="btn small" type="button" id="btn-show">정답 보기</button><button class="btn small primary" type="button" id="btn-check">채점</button>`;
+    const r = rng(clozeSeed * 9973 + s.id.length * 31 + S.level);
+    let bi = 0;
+    body = `<p class="parse-info" style="margin:0 0 10px">빈칸에 단어를 쓰고 Enter로 다음 칸으로 갑니다. 대소문자·문장부호는 따지지 않습니다. <span class="score" id="cloze-score"></span></p><div class="lines cloze">${lines.map((l,i) => {
+      const tk = tokens(l.en);
+      const idx = tk.map((t,j) => t.core ? j : -1).filter(j => j >= 0);
+      const k = S.level === 4 ? idx.length : Math.max(1, Math.round(idx.length * S.level / 4));
+      const pick = new Set(idx.map(j => [j, r()]).sort((a,b) => a[1]-b[1]).slice(0,k).map(x => x[0]));
+      const html = tk.map((t,j) => pick.has(j)
+        ? `${esc(t.pre)}<input class="blank" id="b${bi++}" data-ans="${esc(t.core)}" size="${Math.max(2,t.core.length)}" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="${i+1}번째 줄 빈칸">${esc(t.post)}`
+        : esc(t.pre + t.core + t.post)).join(' ');
+      return `<div class="ln"><span class="n">${i+1}</span><div><div class="en">${html}</div>${S.showKo && koShown(lines,i) ? `<div class="ko">${esc(l.ko)}</div>` : ''}</div><button class="speak" type="button" data-say="${i}" aria-label="${i+1}번째 줄 듣기">${SPK}</button></div>`;
+    }).join('')}</div>`;
+  }
+  else if (S.mode === 'test') {
+    tool = `<span>순서</span><span class="seg"><button type="button" data-order="seq" aria-pressed="${!T || T.order==='seq'}">순서대로</button><button type="button" data-order="shuffle" aria-pressed="${!!T && T.order==='shuffle'}">섞어서</button></span><span class="seg"><button type="button" data-only="all" aria-pressed="${!T || !T.onlyWeak}">전체 줄</button><button type="button" data-only="weak" aria-pressed="${!!T && T.onlyWeak}">못 외운 줄만</button></span><span class="sep"></span>${rateSeg}`;
+    body = testHTML(s);
+  }
+  sheet.innerHTML = head + `<div class="toolbar">${tool}</div><div class="body">${body}</div>`;
+  bindSheet(s);
+}
+
+/* ---------- editor ---------- */
+function editorHTML(s){
+  const cur = linesOf(s);
+  return `<div class="editor">
+    ${cur.length ? '' : `<div class="import-box"><strong>강의 자료로 한 번에 채우기</strong><span>받은 압축파일(zip)이나 hwp 파일을 그대로 올리면 72곡의 가사·해석·강의 메모가 자동으로 들어갑니다.</span><label class="btn primary" for="hwp-files">강의 자료 불러오기</label></div>`}
+    <div class="hint"><b>직접 붙여넣기</b>
+      <ol><li>한글(HWP) 파일에서 이 곡의 <b>가사 부분만</b> 드래그해 복사합니다.</li>
+      <li>아래 칸에 붙여넣습니다. 영어 줄 바로 다음에 한글 해석 줄이 있으면 자동으로 짝지어집니다.</li>
+      <li>한 줄에 <b>영어 | 해석</b> 또는 탭으로 구분해도 됩니다. [Chorus] 같은 구간 표시는 건너뜁니다.</li></ol></div>
+    <textarea id="ed-text" placeholder="I once was lost, but now am found&#10;한때 길을 잃었으나 이제는 찾았고&#10;Was blind, but now I see&#10;눈멀었으나 이제는 보네" spellcheck="false">${esc(unparse(cur))}</textarea>
+    <div class="row"><span class="parse-info" id="ed-info"></span></div>
+    <div class="row">
+      <button class="btn primary" type="button" id="ed-save">저장하고 외우기</button>
+      <label class="btn" for="ed-file">.txt 파일 불러오기</label><input type="file" id="ed-file" accept=".txt,text/plain" hidden>
+      ${cur.length ? '<button class="btn ghost" type="button" id="ed-cancel">취소</button><span class="sep" style="flex:1"></span><button class="btn ghost danger" type="button" id="ed-del">이 곡 가사 지우기</button>' : ''}
+    </div></div>`;
+}
+function bindEditor(s){
+  const ta = document.getElementById('ed-text'), info = document.getElementById('ed-info');
+  const upd = () => { const p = parse(ta.value); const ko = p.filter(l => l.ko).length; info.textContent = p.length ? `영어 ${p.length}줄 인식 · 해석이 붙은 줄 ${ko}` : '붙여넣으면 인식된 줄 수가 여기에 나옵니다'; };
+  ta.addEventListener('input', upd); upd();
+  document.getElementById('ed-save').onclick = () => {
+    const p = parse(ta.value);
+    if (!p.length) { info.textContent = '영어 가사 줄을 찾지 못했습니다. 가사를 붙여넣었는지 확인해 주세요.'; return; }
+    const old = linesOf(s); S.lyrics[s.id] = p;
+    if (old.length !== p.length || old.some((l,i) => l.en !== p[i].en)) S.progress[s.id] = new Array(p.length).fill(0);
+    editing = false; T = null; if (S.mode === 'test') S.mode = 'read'; save(); renderList(); renderSheet(); toast('저장했습니다');
+  };
+  document.getElementById('ed-file').onchange = e => { const f = e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = () => { ta.value = r.result; upd(); }; r.readAsText(f, 'utf-8'); };
+  const c = document.getElementById('ed-cancel'); if (c) c.onclick = () => { editing = false; renderSheet(); };
+  const d = document.getElementById('ed-del');
+  if (d) d.onclick = () => {
+    if (d.dataset.armed) { delete S.lyrics[s.id]; delete S.progress[s.id]; editing = false; save(); renderList(); renderSheet(); toast('가사를 지웠습니다'); }
+    else { d.dataset.armed = '1'; d.textContent = '한 번 더 누르면 지워집니다'; setTimeout(() => { if (d.isConnected) { delete d.dataset.armed; d.textContent = '이 곡 가사 지우기'; } }, 3000); }
+  };
+}
+
+/* ---------- test mode ---------- */
+function startTest(s, order, onlyWeak){
+  const p = prog(s);
+  let q = linesOf(s).map((_,i) => i);
+  if (onlyWeak) q = q.filter(i => p[i] !== 2);
+  if (order === 'shuffle') { const r = rng(Date.now() % 100000); q = q.map(i => [i, r()]).sort((a,b) => a[1]-b[1]).map(x => x[0]); }
+  T = {sid:s.id, order, onlyWeak, queue:q, total:q.length, known:0, again:0, revealed:false, typed:''};
+}
+function testHTML(s){
+  if (!T || T.sid !== s.id) startTest(s, T ? T.order : 'seq', T ? T.onlyWeak : false);
+  const lines = linesOf(s);
+  if (!T.total) return `<div class="done-box"><div class="big">100%</div><p>못 외운 줄이 없습니다. 전체 줄로 다시 점검해 보세요.</p></div>`;
+  if (!T.queue.length) {
+    return `<div class="done-box"><div class="big">${pct(s)}%</div><p>이번 회차 끝. 한 번에 외운 줄 ${T.known} · 다시 본 횟수 ${T.again}</p><div class="row" style="justify-content:center"><button class="btn primary" type="button" id="t-restart">처음부터 다시</button><button class="btn" type="button" id="t-weak">못 외운 줄만</button></div></div>`;
+  }
+  const i = T.queue[0], l = lines[i], prev = i > 0 ? lines[i-1] : null;
+  const done = T.total - T.queue.length;
+  let reveal = '';
+  if (T.revealed) {
+    const exp = tokens(l.en), got = T.typed.split(/\s+/).map(norm).filter(Boolean);
+    let marked, acc = '';
+    if (got.length) {
+      const e = exp.map(t => norm(t.core)), m = e.length, n = got.length;
+      const dp = Array.from({length:m+1}, () => new Array(n+1).fill(0));
+      for (let a = m-1; a >= 0; a--) for (let b = n-1; b >= 0; b--) dp[a][b] = e[a] && e[a] === got[b] ? dp[a+1][b+1] + 1 : Math.max(dp[a+1][b], dp[a][b+1]);
+      const hit = new Set(); let a = 0, b = 0;
+      while (a < m && b < n) { if (e[a] && e[a] === got[b]) { hit.add(a); a++; b++; } else if (dp[a+1][b] >= dp[a][b+1]) a++; else b++; }
+      const words = exp.filter(t => t.core).length;
+      marked = exp.map((t,j) => !t.core ? esc(t.pre) : `${esc(t.pre)}<span class="${hit.has(j)?'w-ok':'w-miss'}">${esc(t.core)}</span>${esc(t.post)}`).join(' ');
+      acc = `<span class="acc">단어 ${hit.size} / ${words} 일치 (${Math.round(hit.size/words*100)}%)</span>`;
+    } else marked = esc(l.en);
+    reveal = `<div class="reveal">${marked}${acc}</div>`;
+  }
+  return `<div class="card">
+    <div class="progress-line"><span>${i+1}번째 줄</span><span>${done} / ${T.total}</span></div>
+    <div class="meter"><i style="width:${done/T.total*100}%"></i></div>
+    <div class="cue"><small>앞 줄</small>${prev ? esc(prev.en) : '첫 줄입니다'}</div>
+    <div class="prompt-ko${l.ko?'':' none'}">${l.ko ? esc(l.ko) : '해석이 없는 줄입니다. 앞 줄에 이어지는 가사를 떠올려 보세요.'}</div>
+    <textarea id="t-answer" placeholder="떠오르는 영어 가사를 쓰거나, 소리 내어 말한 뒤 정답 보기를 누르세요" autocomplete="off" autocapitalize="off" spellcheck="false" ${T.revealed?'readonly':''}>${esc(T.typed)}</textarea>
+    ${T.revealed ? reveal + `<div class="grade"><button class="btn again" type="button" id="t-again">다시 (뒤로 보내기)</button><button class="btn know" type="button" id="t-know">외웠음</button></div><div class="row"><button class="btn small" type="button" id="t-say">${SPK} 듣기</button></div>`
+      : `<div class="row"><button class="btn primary" type="button" id="t-reveal">정답 보기</button><button class="btn" type="button" id="t-hint">첫 글자 힌트</button><button class="btn" type="button" id="t-say">${SPK} 듣기</button></div><div class="parse-info" id="t-hint-box"></div>`}
+  </div>`;
+}
+
+/* ---------- events on the sheet ---------- */
+function bindSheet(s){
+  const lines = linesOf(s);
+  const q = sel => sheet.querySelector(sel);
+  const eb = q('#btn-edit'); if (eb) eb.onclick = () => { stopSpeak(); editing = true; renderSheet(); };
+  const rb = q('#btn-reset');
+  if (rb) rb.onclick = () => {
+    if (rb.dataset.armed) { S.progress[s.id] = new Array(lines.length).fill(0); T = null; save(); renderList(); renderSheet(); toast('암기 기록을 초기화했습니다'); }
+    else { rb.dataset.armed = '1'; rb.textContent = '한 번 더 누르면 초기화'; setTimeout(() => { if (rb.isConnected) { delete rb.dataset.armed; rb.textContent = '암기 기록 초기화'; } }, 3000); }
+  };
+  sheet.querySelectorAll('.tab').forEach(t => t.onclick = () => { stopSpeak(); S.mode = t.dataset.mode; save(); renderSheet(); });
+  const ko = q('#opt-ko'); if (ko) ko.onchange = () => { S.showKo = ko.checked; save(); keepInputs(renderSheet); };
+  sheet.querySelectorAll('[data-rate]').forEach(b => b.onclick = () => { S.rate = +b.dataset.rate; save(); sheet.querySelectorAll('[data-rate]').forEach(x => x.setAttribute('aria-pressed', x === b)); });
+  sheet.querySelectorAll('[data-say]').forEach(b => b.onclick = () => { stopSpeak(); speak(lines[+b.dataset.say].en); });
+
+  if (S.mode === 'read') {
+    const nt = q('#opt-note'); if (nt) nt.onchange = () => { S.showNote = nt.checked; save(); renderSheet(); };
+    const he = q('#opt-hide-en'); he.onchange = () => { hideEn = he.checked; revealedEn.clear(); renderSheet(); };
+    sheet.querySelectorAll('.hidden-en').forEach(el => { const f = () => { revealedEn.add(+el.dataset.reveal); el.classList.remove('hidden-en'); }; el.onclick = f; el.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); f(); } }; });
+    q('#btn-playall').onclick = () => {
+      if (playAll) { stopSpeak(); q('#btn-playall').textContent = '전곡 듣기'; return; }
+      stopSpeak(); playAll = true; q('#btn-playall').textContent = '멈춤';
+      const rows = sheet.querySelectorAll('.ln');
+      const step = i => {
+        rows.forEach(r => r.classList.remove('playing'));
+        if (!playAll || i >= lines.length) { playAll = false; const b = q('#btn-playall'); if (b) b.textContent = '전곡 듣기'; return; }
+        rows[i].classList.add('playing'); rows[i].scrollIntoView({block:'nearest', behavior:'smooth'});
+        speak(lines[i].en, () => setTimeout(() => step(i+1), 350));
+      };
+      step(0);
+    };
+  }
+  if (S.mode === 'initials') {
+    sheet.querySelectorAll('[data-toggle]').forEach(el => { const f = () => { const i = +el.dataset.toggle; initialsOpen.has(i) ? initialsOpen.delete(i) : initialsOpen.add(i); renderSheet(); }; el.onclick = f; el.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); f(); } }; });
+    q('#btn-open-all').onclick = () => { if (initialsOpen.size === lines.length) initialsOpen.clear(); else lines.forEach((_,i) => initialsOpen.add(i)); renderSheet(); };
+  }
+  if (S.mode === 'cloze') {
+    const blanks = [...sheet.querySelectorAll('.blank')];
+    sheet.querySelectorAll('[data-level]').forEach(b => b.onclick = () => { S.level = +b.dataset.level; save(); renderSheet(); });
+    q('#btn-shuffle').onclick = () => { clozeSeed++; renderSheet(); };
+    const check = () => {
+      let ok = 0, filled = 0;
+      blanks.forEach(b => { b.classList.remove('ok','bad'); if (!b.value.trim()) return; filled++; if (norm(b.value) === norm(b.dataset.ans)) { b.classList.add('ok'); ok++; } else b.classList.add('bad'); });
+      q('#cloze-score').textContent = `· 맞음 ${ok} / ${blanks.length}` + (filled < blanks.length ? ` (빈칸 ${blanks.length - filled}개 남음)` : '');
+      if (ok === blanks.length && blanks.length) toast('빈칸을 모두 맞혔습니다');
+    };
+    q('#btn-check').onclick = check;
+    q('#btn-show').onclick = () => { blanks.forEach(b => { if (norm(b.value) !== norm(b.dataset.ans)) { b.value = b.dataset.ans; b.classList.remove('ok'); b.classList.add('bad'); } }); q('#cloze-score').textContent = '· 틀린 칸에 정답을 채웠습니다'; };
+    blanks.forEach((b,k) => {
+      b.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); if (blanks[k+1]) blanks[k+1].focus(); else check(); } });
+      b.addEventListener('input', () => b.classList.remove('ok','bad'));
+    });
+    if (blanks[0] && window.matchMedia('(min-width: 861px)').matches) blanks[0].focus({preventScroll:true});
+  }
+  if (S.mode === 'test') {
+    sheet.querySelectorAll('[data-order]').forEach(b => b.onclick = () => { startTest(s, b.dataset.order, T ? T.onlyWeak : false); renderSheet(); });
+    sheet.querySelectorAll('[data-only]').forEach(b => b.onclick = () => { startTest(s, T ? T.order : 'seq', b.dataset.only === 'weak'); renderSheet(); });
+    const r1 = q('#t-restart'); if (r1) r1.onclick = () => { startTest(s, T.order, false); renderSheet(); };
+    const r2 = q('#t-weak'); if (r2) r2.onclick = () => { startTest(s, T.order, true); renderSheet(); };
+    if (!T.queue.length) return;
+    const i = T.queue[0], ans = q('#t-answer');
+    if (ans && !T.revealed) { ans.oninput = () => { T.typed = ans.value; }; ans.onkeydown = e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); T.typed = ans.value; T.revealed = true; renderSheet(); } }; if (window.matchMedia('(min-width: 861px)').matches) ans.focus({preventScroll:true}); }
+    const say = q('#t-say'); if (say) say.onclick = () => { stopSpeak(); speak(lines[i].en); };
+    const rv = q('#t-reveal'); if (rv) rv.onclick = () => { T.typed = ans.value; T.revealed = true; renderSheet(); };
+    const hn = q('#t-hint'); if (hn) hn.onclick = () => { q('#t-hint-box').textContent = tokens(lines[i].en).map(t => t.core ? t.pre + t.core[0] + '_'.repeat(Math.max(0,t.core.length-1)) + t.post : t.pre).join(' '); };
+    const p = prog(s);
+    const kn = q('#t-know'); if (kn) kn.onclick = () => { if (p[i] !== 1) T.known++; p[i] = 2; T.queue.shift(); T.revealed = false; T.typed = ''; save(); renderList(); renderSheet(); };
+    const ag = q('#t-again'); if (ag) ag.onclick = () => { p[i] = 1; T.again++; T.queue.push(T.queue.shift()); T.revealed = false; T.typed = ''; save(); renderList(); renderSheet(); };
+    if (T.revealed) document.onkeydown = e => { if (S.mode !== 'test' || !T || !T.revealed) { document.onkeydown = null; return; } if (e.key === '1') q('#t-again')?.click(); if (e.key === '2' || e.key === 'Enter') q('#t-know')?.click(); };
+    else document.onkeydown = null;
+  }
+}
+/* keep typed cloze answers when re-rendering for the 해석 toggle */
+function keepInputs(fn){
+  const vals = [...sheet.querySelectorAll('.blank')].map(b => [b.id, b.value, b.className]);
+  fn();
+  vals.forEach(([id,v,c]) => { const b = document.getElementById(id); if (b) { b.value = v; b.className = c; } });
+}
+
+/* ---------- lesson import (zip / hwp) ---------- */
+function songForFile(name, text){
+  const base = name.split('/').pop();
+  const m = base.match(/^\s*(\d+)\s*강/) || text.slice(0, 300).match(/#\s*(\d+)/);
+  if (m) { const s = byId('L' + (+m[1])); if (s) return s; }
+  const k = x => x.toLowerCase().replace(/[^a-z]/g, '');
+  const kb = k(base.replace(/\.hwp$/i, ''));
+  return SONGS.slice().sort((a,b) => k(b.title).length - k(a.title).length).find(s => kb.endsWith(k(s.title))) || null;
+}
+async function importFiles(files){
+  if (!window.CFB || !window.pako || !window.JSZip) { toast('파일 읽기 도구를 불러오지 못했습니다. 인터넷 연결을 확인하고 새로고침해 주세요.'); return; }
+  const jobs = [];
+  for (const f of files) {
+    if (/\.zip$/i.test(f.name)) {
+      const z = await JSZip.loadAsync(f);
+      Object.values(z.files).forEach(e => { if (!e.dir && /\.hwp$/i.test(e.name) && !/(^|\/)(__MACOSX|\._)/.test(e.name)) jobs.push({name:e.name, get:() => e.async('uint8array')}); });
+    } else if (/\.hwp$/i.test(f.name)) jobs.push({name:f.name, get:async () => new Uint8Array(await f.arrayBuffer())});
+  }
+  let ok = 0; const fail = [];
+  for (const j of jobs) {
+    try {
+      const text = hwpText(await j.get(), CFB, pako);
+      const s = songForFile(j.name, text);
+      if (!s) { fail.push(j.name.split('/').pop()); continue; }
+      const lines = parseLesson(text, s.title);
+      if (!lines.length) { fail.push(j.name.split('/').pop()); continue; }
+      const old = S.lyrics[s.id] || [];
+      S.lyrics[s.id] = lines;
+      if (old.length !== lines.length || old.some((l,i) => l.en !== lines[i].en)) S.progress[s.id] = new Array(lines.length).fill(0);
+      ok++;
+    } catch(e) { fail.push(j.name.split('/').pop()); }
+  }
+  save();
+  if (ok && (S.current === 'ex' || !linesOf(byId(S.current)).length)) { const first = SONGS.find(s => linesOf(s).length); if (first) S.current = first.id; }
+  editing = false; T = null; renderList(); renderSheet();
+  toast(jobs.length ? `${ok}곡을 불러왔습니다` + (fail.length ? ` · ${fail.length}개는 읽지 못했습니다` : '') : 'hwp 파일을 찾지 못했습니다');
+  if (fail.length) console.log('읽지 못한 파일:', fail);
+}
+document.getElementById('hwp-files').addEventListener('change', e => { const fs = [...e.target.files]; e.target.value = ''; if (fs.length) { toast('자료를 읽는 중입니다…'); importFiles(fs).catch(() => toast('파일을 읽지 못했습니다. zip 또는 hwp 파일인지 확인해 주세요.')); } });
+
+/* ---------- backup ---------- */
+const bp = document.getElementById('backup-panel'), bt = document.getElementById('backup-text'), im = document.getElementById('import-msg');
+document.getElementById('btn-backup').onclick = () => { bp.hidden = !bp.hidden; };
+document.getElementById('btn-export').onclick = () => {
+  bt.value = JSON.stringify({app:'popsong-memorizer', v:1, saved:new Date().toISOString(), lyrics:S.lyrics, progress:S.progress});
+  document.getElementById('btn-copy-export').disabled = false;
+  im.textContent = `${Object.keys(S.lyrics).length}곡 백업 코드를 만들었습니다`;
+};
+document.getElementById('btn-copy-export').onclick = () => {
+  const done = () => toast('백업 코드를 복사했습니다');
+  try { navigator.clipboard.writeText(bt.value).then(done, () => { bt.select(); im.textContent = '자동 복사가 막혀 있어 코드를 선택해 두었습니다. Ctrl+C로 복사하세요.'; }); }
+  catch(e) { bt.select(); im.textContent = '코드를 선택해 두었습니다. Ctrl+C로 복사하세요.'; }
+};
+function importText(txt){
+  try {
+    const d = JSON.parse(txt);
+    if (!d || typeof d.lyrics !== 'object') throw 0;
+    let n = 0;
+    for (const [id, lines] of Object.entries(d.lyrics)) {
+      if (!byId(id) || !Array.isArray(lines)) continue;
+      S.lyrics[id] = lines.filter(l => l && typeof l.en === 'string').map(l => ({en:String(l.en), ko:String(l.ko || ''), shared:!!l.shared, note:String(l.note || '')}));
+      if (d.progress && Array.isArray(d.progress[id])) S.progress[id] = d.progress[id].map(v => (v === 1 || v === 2) ? v : 0);
+      n++;
+    }
+    save(); renderList(); renderSheet(); im.textContent = `${n}곡을 복원했습니다`; toast('복원했습니다');
+  } catch(e) { im.textContent = '백업 코드 형식이 아닙니다. 백업 코드 만들기로 만든 내용을 그대로 붙여넣어 주세요.'; }
+}
+document.getElementById('btn-import').onclick = () => { if (bt.value.trim()) importText(bt.value.trim()); else im.textContent = '먼저 백업 코드를 붙여넣어 주세요'; };
+document.getElementById('import-file').onchange = e => { const f = e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = () => importText(String(r.result)); r.readAsText(f, 'utf-8'); };
+
+if (!byId(S.current)) S.current = 'ex';
+if (!MODES.some(m => m[0] === S.mode)) S.mode = 'read';
+renderList(); renderSheet();
+})();
+</script>
+
+</body>
+</html>
